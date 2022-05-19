@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Gastos Recorrentes',
+          title: 'Gasto Recorrentes',
           theme: ThemeData(
             primarySwatch: Colors.indigo,
             primaryColor: Colors.indigo,
