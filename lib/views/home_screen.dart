@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
+import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
@@ -12,10 +13,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Gastos Recorrentes')),
+      appBar: AppBar(title: Text(MultiLanguage.translate("appTitle"))),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
-        tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
       body: Center(

@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/services/shared_preferences.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
-import 'package:gastosrecorrentes/views/sign_in.dart';
+import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
+import 'package:gastosrecorrentes/views/init_app.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -18,18 +20,19 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BillsViewModel()),
+        ChangeNotifierProvider(create: (_) => InitAppViewModel()),
+        Provider(create: (_) => SharedPreferencesService()),
       ],
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Gasto Recorrentes',
+          title: 'Gastos Recorrentes',
           theme: ThemeData(
             primarySwatch: Colors.indigo,
             primaryColor: Colors.indigo,
             scaffoldBackgroundColor: Colors.grey[200],
-            listTileTheme: ListTileThemeData(tileColor: Colors.grey[600]),
             shadowColor: Colors.grey[800],
             textSelectionTheme: const TextSelectionThemeData(
               cursorColor: Colors.indigo,
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
               selectionColor: Colors.indigo,
             ),
           ),
-          home: const SignInScreen(),
+          home: const InitApp(),
         ),
       ),
     );

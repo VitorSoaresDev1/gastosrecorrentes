@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/shared/text_styles.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -21,15 +23,15 @@ class SignInScreen extends StatelessWidget {
                         TextFormField(
                           autofocus: true,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            label: Text("E-mail"),
+                          decoration: InputDecoration(
+                            label: Text(MultiLanguage.translate("email")),
                           ),
                         ),
                         const SizedBox(height: 24),
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            label: Text("Senha"),
+                          decoration: InputDecoration(
+                            label: Text(MultiLanguage.translate("password")),
                           ),
                         ),
                       ],
@@ -39,10 +41,10 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text("Esqueci minha senha", style: TextStyle(decoration: TextDecoration.underline)),
-                    Text(" | "),
-                    Text("Criar usuário", style: TextStyle(decoration: TextDecoration.underline)),
+                  children: [
+                    Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links()),
+                    const Text(" | "),
+                    Text(MultiLanguage.translate("createUser"), style: TextStyles.links()),
                   ],
                 ),
                 const SizedBox(height: 32),
@@ -52,7 +54,7 @@ class SignInScreen extends StatelessWidget {
                     fixedSize: MaterialStateProperty.all(const Size.fromWidth(160)),
                   ),
                   onPressed: () => {},
-                  child: const Text("Entrar"),
+                  child: Text(MultiLanguage.translate("logIn")),
                 )
               ],
             ),
