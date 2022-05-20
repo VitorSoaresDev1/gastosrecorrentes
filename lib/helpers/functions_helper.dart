@@ -10,3 +10,15 @@ scheduleCall(Function function) {
     await function();
   });
 }
+
+void showSnackBar(context, text, {duration}) {
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(text),
+      duration: duration ?? const Duration(seconds: 4),
+      behavior: SnackBarBehavior.floating,
+      elevation: 6,
+    ),
+  );
+}

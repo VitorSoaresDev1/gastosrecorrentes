@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/services/shared_preferences.dart';
+import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 import 'package:provider/provider.dart';
 
 class LanguageDialog extends StatefulWidget {
@@ -15,6 +16,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
   @override
   Widget build(BuildContext context) {
     final preferences = context.watch<SharedPreferencesService>();
+    final initAppViewModel = context.watch<InitAppViewModel>();
     return AlertDialog(
       title: const Text("Language:"),
       content: Column(
@@ -57,6 +59,7 @@ class _LanguageDialogState extends State<LanguageDialog> {
               chosenLanguage = null;
             } else {
               await preferences.setlanguage(chosenLanguage);
+              initAppViewModel.language = chosenLanguage;
               Navigator.pop(context);
             }
           },

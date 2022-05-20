@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gastosrecorrentes/views/sign_in.dart';
 
-void openSignInPage(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => const SignInScreen()));
+void replaceToSignInPage(BuildContext context) {
+  Navigator.pushReplacementNamed(context, '/signIn');
+}
+
+void openCreateUserPage(BuildContext context) {
+  Navigator.pushNamed(context, '/createUser');
+}
+
+void replaceToHomeScreen(BuildContext context) {
+  Navigator.pushReplacementNamed(context, '/homeScreen');
 }

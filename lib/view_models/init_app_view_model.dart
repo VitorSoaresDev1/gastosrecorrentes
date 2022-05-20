@@ -7,23 +7,28 @@ import 'package:provider/provider.dart';
 import '../services/shared_preferences.dart';
 
 class InitAppViewModel extends ChangeNotifier {
-  bool loading = true;
-  String? language;
+  bool _loading = true;
+  String? _language;
+
+  get loading => _loading;
+
+  set language(value) => _language = value;
+  get language => _language;
 
   loadAppInitialConfigs(BuildContext context) async {
     setUpLocators();
     final preferences = context.watch<SharedPreferencesService>();
     await preferences.startSharedPreferences();
-    language = await preferences.getLanguageChoice();
-    //if (language == null) {
-    await showLanguageDialog(context);
-    //}
-    await locator<MultiLanguage>().loadLanguageMap(language!);
-    loading = false;
+    _language = await preferences.getLanguageChoice();
+    if (language == null) {
+      await _showLanguageDialog(context);
+    }
+    await locator<MultiLanguage>().loadLanguageMap(_language!);
+    _loading = false;
     notifyListeners();
   }
 
-  showLanguageDialog(BuildContext context) async {
+  _showLanguageDialog(BuildContext context) async {
     await showDialog(context: context, barrierDismissible: false, builder: (context) => const LanguageDialog());
   }
 }

@@ -1,8 +1,24 @@
 {
     "appTitle": "Recurrent Bills",
     "email": "E-mail",
+    "repeatEmail": "Repeat E-mail",
     "password": "Password",
+    "repeatPassword": "Repeat Password",
+    "resetPassword": "Reset Password",
+    "resetPasswordEmailSent": "The reset password e-mail has been sent",
     "logIn": "Log In",
     "forgotPassword": "Forgot password",
-    "createUser": "Create user"
+    "createUser": "Create user",
+    "name": "Name",
+    "confirm": "Confirm",
+    "userCreatedSuccessfully": "User created successfully.",
+    "ENTER_VALID_NAME": "Enter a valid name",
+    "ENTER_VALID_EMAIL": "Enter a valid e-mail address",
+    "EMAIL_DOESNT_MATCH": "The e-mails must match",
+    "ENTER_VALID_PASSWORD": "The password must contain at least 8 characters, a letter and a number",
+    "PASSWORD_DOESNT_MATCH": "The passwords must match",
+    "CANT_BE_EMPTY": "The field can't be empty",
+    "EMAIL_ALREADY_IN_USE": "The E-mail address is already in use",
+    "USER_NOT_FOUND": "User not found.",
+    "CREDENTIALS_NOT_FOUND": "E-mail and or password provided are incorret."
 }
