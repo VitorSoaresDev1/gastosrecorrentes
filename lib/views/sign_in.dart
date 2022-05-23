@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
@@ -87,33 +87,18 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
                     const Text(" | "),
                     GestureDetector(
-                      onTap: () => openCreateUserPage(context),
+                      onTap: () => openCreateUserScreen(context),
                       child: Text(MultiLanguage.translate("createUser"), style: TextStyles.links()),
                     ),
                   ],
                 ),
                 const SizedBox(height: 32),
-                ElevatedButton(
-                  child: usersViewModel.loading
-                      ? Container(
-                          width: 24,
-                          height: 24,
-                          padding: const EdgeInsets.all(2.0),
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 3,
-                            ),
-                          ),
-                        )
-                      : Text(MultiLanguage.translate("logIn")),
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(6),
-                    fixedSize: MaterialStateProperty.all(const Size.fromWidth(160)),
-                  ),
-                  onPressed: () =>
-                      usersViewModel.signIn(context, e: _emailController.text, p: _passwordController.text),
-                )
+                ButtonWithLoading(
+                  isLoading: usersViewModel.loading,
+                  title: MultiLanguage.translate("logIn"),
+                  onPressed: () async =>
+                      await usersViewModel.signIn(context, e: _emailController.text, p: _passwordController.text),
+                ),
               ],
             ),
           );

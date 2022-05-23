@@ -3,6 +3,7 @@ import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
+//import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 
@@ -12,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
+    //final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("appTitle"))),
       floatingActionButton: FloatingActionButton(
@@ -25,6 +27,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(DateHelper.formatMMMMYYYY(DateTime.now()), style: TextStyles.titles()),
+              //Text(usersViewModel.user?.toJson() ?? ''),
               const SizedBox(height: 8),
               Expanded(
                 child: ListView.separated(

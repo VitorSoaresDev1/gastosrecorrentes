@@ -13,7 +13,7 @@ class InitApp extends StatelessWidget {
     if (initAppViewModel.loading) {
       initAppViewModel.loadAppInitialConfigs(context);
     } else {
-      scheduleCall(() => replaceToSignInPage(context));
+      scheduleCall(() => replaceToSignInScreen(context));
     }
     return Scaffold(body: Container());
   }
