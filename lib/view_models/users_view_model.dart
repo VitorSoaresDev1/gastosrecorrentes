@@ -1,14 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/reset_password_dialog.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
+import 'package:gastosrecorrentes/models/user.dart';
+import 'package:gastosrecorrentes/services/firestore_service.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
+import 'package:gastosrecorrentes/shared/firestore_constants.dart';
 
 class UsersViewModel extends ChangeNotifier {
+  AppUser? user;
   bool _isLoading = false;
   String? emailController = '';
   String? passwordController = '';
+
   final GlobalKey<FormState> _createUserFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUserInFormKey = GlobalKey<FormState>();
 
@@ -21,10 +27,12 @@ class UsersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  createUser(context, {String? e, String? p}) async {
+  createUser(context, {String? e, String? p, String? n}) async {
     if (_createUserFormKey.currentState!.validate()) {
+      setLoading(true);
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(email: e!, password: p!);
+        await FireStoreService.addUser(name: n!, email: e);
         showSnackBar(context, MultiLanguage.translate("userCreatedSuccessfully"));
         Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
@@ -33,15 +41,18 @@ class UsersViewModel extends ChangeNotifier {
         }
       } catch (e) {
         showSnackBar(context, e.toString());
+      } finally {
+        setLoading(false);
       }
     }
   }
 
-  signIn(context, {String? e, String? p}) async {
+  Future signIn(context, {String? e, String? p}) async {
     if (_signUserInFormKey.currentState!.validate()) {
       setLoading(true);
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: e!, password: p!);
+        user = await FireStoreService.getUser(email: e);
         replaceToHomeScreen(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {

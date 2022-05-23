@@ -11,6 +11,7 @@
     "createUser": "Create user",
     "name": "Name",
     "confirm": "Confirm",
+    "createNewBill": "Create new bill",
     "userCreatedSuccessfully": "User created successfully.",
     "ENTER_VALID_NAME": "Enter a valid name",
     "ENTER_VALID_EMAIL": "Enter a valid e-mail address",
