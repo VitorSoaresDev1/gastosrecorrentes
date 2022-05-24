@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/language_dialog.dart';
 import 'package:gastosrecorrentes/services/locator.dart';
@@ -11,16 +12,21 @@ class InitAppViewModel extends ChangeNotifier {
   String? _language;
 
   get loading => _loading;
+  get language => _language;
 
   set language(value) => _language = value;
-  get language => _language;
 
   loadAppInitialConfigs(BuildContext context) async {
     setUpLocators();
     final preferences = context.watch<SharedPreferencesService>();
     await preferences.startSharedPreferences();
+    if (await preferences.isFirstTimeAppOpenning()) {
+      if (FirebaseAuth.instance.currentUser != null) {
+        await FirebaseAuth.instance.signOut();
+      }
+    }
     _language = await preferences.getLanguageChoice();
-    if (language == null) {
+    if (_language == null) {
       await _showLanguageDialog(context);
     }
     await locator<MultiLanguage>().loadLanguageMap(_language!);

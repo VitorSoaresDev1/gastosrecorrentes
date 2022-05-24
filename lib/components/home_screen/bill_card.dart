@@ -35,7 +35,7 @@ class BillCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(bill.title, style: TextStyles.titles2()),
+                      Text(bill.name, style: TextStyles.titles2()),
                       const SizedBox(height: 2),
                       Row(
                         mainAxisSize: MainAxisSize.max,
@@ -52,7 +52,8 @@ class BillCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Text('Vencimento: ${DateHelper.formatDDMM(bill.monthlydueDate)}',
+                          Text(
+                              'Vencimento: ${DateHelper.formatDDMM(DateTime(DateTime.now().year, DateTime.now().month, bill.monthlydueDay!))}',
                               style: TextStyles.bodySubtitle()),
                         ],
                       ),
@@ -90,28 +91,3 @@ class BillCard extends StatelessWidget {
         ));
   }
 }
-
-// ListTile(
-//         contentPadding: EdgeInsets.zero,
-//         visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-//         minVerticalPadding: 0,
-//         dense: true,
-//         tileColor: Colors.white,
-//         isThreeLine: true,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(10),
-//           side: const BorderSide(
-//             color: Colors.black,
-//             width: .7,
-//           ),
-//         ),
-//         title: Text(bill.title, style: TextStyles.bodyText()),
-//         subtitle: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Valor: ' + CurrencyHelper.formatDouble(bill.value), style: TextStyles.bodySubtitle()),
-//             Text('Vencimento: ${DateHelper.formatDDMM(bill.monthlydueDate)}', style: TextStyles.bodySubtitle()),
-//           ],
-//         ),
-//         trailing: Container(width: 10, height: double.infinity, color: Bill.getCurrentBillListTileColor(context, bill)),
-//       ),

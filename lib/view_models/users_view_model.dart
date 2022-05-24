@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/reset_password_dialog.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
@@ -7,7 +6,6 @@ import 'package:gastosrecorrentes/models/user.dart';
 import 'package:gastosrecorrentes/services/firestore_service.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
-import 'package:gastosrecorrentes/shared/firestore_constants.dart';
 
 class UsersViewModel extends ChangeNotifier {
   AppUser? user;
@@ -52,7 +50,7 @@ class UsersViewModel extends ChangeNotifier {
       setLoading(true);
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: e!, password: p!);
-        user = await FireStoreService.getUser(email: e);
+        await loadUserProfile(email: e);
         replaceToHomeScreen(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
@@ -64,6 +62,10 @@ class UsersViewModel extends ChangeNotifier {
         setLoading(false);
       }
     }
+  }
+
+  Future loadUserProfile({String? email}) async {
+    user = await FireStoreService.getUser(email: email!);
   }
 
   resetPasswordDialog(BuildContext context) async {

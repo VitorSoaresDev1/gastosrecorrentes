@@ -16,4 +16,13 @@ class SharedPreferencesService {
     if (language == null) return;
     await prefs!.setString("language", language);
   }
+
+  Future<bool> isFirstTimeAppOpenning() async {
+    bool? hasOpenned = prefs!.getBool('hasOpenned');
+    if (hasOpenned == null) {
+      await prefs!.setBool("hasOpenned", true);
+      return true;
+    }
+    return false;
+  }
 }
