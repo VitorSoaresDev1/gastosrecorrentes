@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
+import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/navigation_service.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
-//import 'package:gastosrecorrentes/view_models/users_view_model.dart';
+import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    scheduleCall(() {
+      final billsViewModel = Provider.of<BillsViewModel>(context, listen: false);
+      billsViewModel.getRegisteredBills(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
-    //final usersViewModel = context.watch<UsersViewModel>();
+    final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("appTitle"))),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () => openCreateBillScreen(context),
         child: const Icon(Icons.add),
       ),
       body: Center(
@@ -27,14 +44,16 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(DateHelper.formatMMMMYYYY(DateTime.now()), style: TextStyles.titles()),
-              //Text(usersViewModel.user?.toJson() ?? ''),
+              Text(usersViewModel.user?.toJson() ?? ''),
               const SizedBox(height: 8),
               Expanded(
-                child: ListView.separated(
-                  itemCount: billsViewModel.listBills.length,
-                  separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => BillCard(bill: billsViewModel.listBills[index]),
-                ),
+                child: !billsViewModel.loading
+                    ? ListView.separated(
+                        itemCount: billsViewModel.listBills.length,
+                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
+                        itemBuilder: (context, index) => BillCard(bill: billsViewModel.listBills[index]),
+                      )
+                    : const CircularProgressIndicator(),
               ),
             ],
           ),

@@ -12,7 +12,13 @@
     "name": "Nome",
     "confirm": "Confirmar",
     "createNewBill": "Criar nova conta",
+    "createBill": "Criar conta",
+    "createdBillSuccessfully": "Conta criada com sucesso.",
     "userCreatedSuccessfully": "Usuário criado com sucesso.",
+    "value": "Valor",
+    "dueDay": "Dia do vencimento",
+    "numberOfInstallments": "Número de prestações",
+    "numberOfInstallmentsExplainText": "O valor 0 cria uma conta sem prazo para terminar. O numero inserido será a quantidade de meses que a conta se repetirá.",
     "ENTER_VALID_NAME": "Insira um nome válido",
     "ENTER_VALID_EMAIL": "Insira um email válido",
     "EMAIL_DOESNT_MATCH": "Os e-mails devem ser iguais",
@@ -21,5 +27,6 @@
     "CANT_BE_EMPTY": "O campo não pode estar vazio",
     "EMAIL_ALREADY_IN_USE": "O E-mail escolhido já está em uso",
     "USER_NOT_FOUND": "Usuário não encontrado",
-    "CREDENTIALS_NOT_FOUND": "E-mail e ou senha fornecidos estão incorretos"
+    "CREDENTIALS_NOT_FOUND": "E-mail e ou senha fornecidos estão incorretos",
+    "INVALID_DAY_OF_MONTH": "Insira um dia do mês válido"
 }

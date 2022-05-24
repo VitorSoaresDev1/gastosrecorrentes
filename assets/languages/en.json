@@ -12,7 +12,13 @@
     "name": "Name",
     "confirm": "Confirm",
     "createNewBill": "Create new bill",
+    "createBill": "Create bill",
+    "createdBillSuccessfully": "Bill created successfully.",
     "userCreatedSuccessfully": "User created successfully.",
+    "value": "amount to pay",
+    "dueDay": "Due day",
+    "numberOfInstallments": "Number of installments",
+    "numberOfInstallmentsExplainText": "Value equals to 0 creates a bill with no expiration date. The value inserted will be the amount of months the bill will be needed to pay",
     "ENTER_VALID_NAME": "Enter a valid name",
     "ENTER_VALID_EMAIL": "Enter a valid e-mail address",
     "EMAIL_DOESNT_MATCH": "The e-mails must match",
@@ -21,5 +27,6 @@
     "CANT_BE_EMPTY": "The field can't be empty",
     "EMAIL_ALREADY_IN_USE": "The E-mail address is already in use",
     "USER_NOT_FOUND": "User not found.",
-    "CREDENTIALS_NOT_FOUND": "E-mail and or password provided are incorret."
+    "CREDENTIALS_NOT_FOUND": "E-mail and or password provided are incorret.",
+    "INVALID_DAY_OF_MONTH": "Enter a valid day of the month"
 }
