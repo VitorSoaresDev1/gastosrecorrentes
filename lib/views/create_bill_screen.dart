@@ -89,9 +89,11 @@ class CreateBillForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final billsViewModel = context.watch<BillsViewModel>();
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .8),
       child: Form(
+        key: billsViewModel.createBillFormKey,
         child: ListView(
           shrinkWrap: true,
           children: [

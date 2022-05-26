@@ -5,7 +5,6 @@ import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
-import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 
@@ -30,31 +29,44 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
-    final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
-      appBar: AppBar(title: Text(MultiLanguage.translate("appTitle"))),
+      appBar: AppBar(title: Text(MultiLanguage.translate("activeBills"))),
       floatingActionButton: FloatingActionButton(
         onPressed: () => openCreateBillScreen(context),
         child: const Icon(Icons.add),
       ),
-      body: Center(
+      body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(DateHelper.formatMMMMYYYY(DateTime.now()), style: TextStyles.titles()),
-              Text(usersViewModel.user?.toJson() ?? ''),
-              const SizedBox(height: 8),
-              Expanded(
-                child: !billsViewModel.loading
-                    ? ListView.separated(
-                        itemCount: billsViewModel.listBills.length,
-                        separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) => BillCard(bill: billsViewModel.listBills[index]),
-                      )
-                    : const CircularProgressIndicator(),
-              ),
+              !billsViewModel.loading
+                  ? Expanded(
+                      child: ListView.separated(
+                      itemCount: billsViewModel.listBills.length,
+                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) => BillCard(
+                        bill: billsViewModel.listBills[index],
+                        onTap: () {
+                          billsViewModel.setCurrentSelectedBill = billsViewModel.listBills[index];
+                          openBillDetailsScreen(context);
+                        },
+                      ),
+                    ))
+                  : const Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 100),
+                        child: SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+              //Text("Total: R\$  ", style: TextStyles.titles()),
             ],
           ),
         ),

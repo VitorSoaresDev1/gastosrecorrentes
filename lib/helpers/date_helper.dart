@@ -23,4 +23,11 @@ class DateHelper {
     String formattedDate = StringHelper.capitalizeFirst(DateFormat.yMMMM('PT_BR').format(date));
     return formattedDate;
   }
+
+  static String formatDDMMYYYY(DateTime? date) {
+    if (date == null) return '-/-';
+    initializeDateFormatting();
+    String formattedDate = StringHelper.capitalizeFirst(DateFormat.yMd('PT_BR').format(date));
+    return formattedDate;
+  }
 }
