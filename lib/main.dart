@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/services/firestore_service.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
 import 'package:gastosrecorrentes/services/shared_preferences.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
@@ -27,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       key: key,
       providers: [
-        ChangeNotifierProvider(create: (_) => BillsViewModel()),
+        ChangeNotifierProvider(create: (_) => BillsViewModel(fireStoreService: FireStoreService())),
         ChangeNotifierProvider(create: (_) => InitAppViewModel()),
         ChangeNotifierProvider(create: (_) => UsersViewModel()),
         Provider(create: (_) => SharedPreferencesService()),
