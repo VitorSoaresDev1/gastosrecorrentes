@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
+import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
+import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
+import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 
 class CreateBillScreen extends StatefulWidget {
@@ -17,6 +20,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
   late TextEditingController _valueController;
   late TextEditingController _dueDayController;
   late TextEditingController _amountMonthsController;
+  final GlobalKey<FormState> createBillFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -39,7 +43,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
   @override
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
-
+    final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("createNewBill"))),
       body: Center(
@@ -47,6 +51,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CreateBillForm(
+              createBillFormKey: createBillFormKey,
               nameController: _nameController,
               valueController: _valueController,
               dueDayController: _dueDayController,
@@ -56,13 +61,24 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
             ButtonWithLoading(
               isLoading: billsViewModel.loading,
               title: MultiLanguage.translate("createBill"),
-              onPressed: () async => await billsViewModel.addNewBill(
-                context,
-                name: _nameController.text,
-                value: _valueController.text,
-                dueDay: _dueDayController.text,
-                amountMonths: _amountMonthsController.text,
-              ),
+              onPressed: () async {
+                try {
+                  if (createBillFormKey.currentState!.validate()) {
+                    await billsViewModel.addNewBill(
+                      userId: usersViewModel.user!.id!,
+                      name: _nameController.text,
+                      value: _valueController.text,
+                      dueDay: _dueDayController.text,
+                      amountMonths: _amountMonthsController.text,
+                    );
+                    await billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
+                    showSnackBar(context, MultiLanguage.translate("createdBillSuccessfully"));
+                    Navigator.pop(context);
+                  }
+                } catch (e) {
+                  showSnackBar(context, e.toString());
+                }
+              },
             ),
           ],
         ),
@@ -76,6 +92,7 @@ class CreateBillForm extends StatelessWidget {
   final TextEditingController valueController;
   final TextEditingController dueDayController;
   final TextEditingController amountMonthsController;
+  final GlobalKey<FormState> createBillFormKey;
 
   const CreateBillForm({
     Key? key,
@@ -83,17 +100,17 @@ class CreateBillForm extends StatelessWidget {
     required this.valueController,
     required this.dueDayController,
     required this.amountMonthsController,
+    required this.createBillFormKey,
   }) : super(key: key);
 
   final double? defaultFieldsVerticalPadding = 8;
 
   @override
   Widget build(BuildContext context) {
-    final billsViewModel = context.watch<BillsViewModel>();
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .8),
       child: Form(
-        key: billsViewModel.createBillFormKey,
+        key: createBillFormKey,
         child: ListView(
           shrinkWrap: true,
           children: [
@@ -169,47 +186,6 @@ class CreateBillForm extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final Widget title;
-  final TextEditingController? controller;
-  final TextInputAction? action;
-  final TextInputType? type;
-  final String? Function(String?)? validator;
-  final List<TextInputFormatter>? inputFormatters;
-  const CustomTextField({
-    Key? key,
-    this.action,
-    this.type,
-    this.validator,
-    this.controller,
-    required this.title,
-    this.inputFormatters,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        title,
-        Flexible(
-          child: TextFormField(
-            controller: controller,
-            textInputAction: action,
-            keyboardType: type,
-            inputFormatters: inputFormatters,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.only(left: 4, bottom: 2),
-            ),
-            validator: validator,
-          ),
-        ),
-      ],
     );
   }
 }

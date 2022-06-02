@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
-import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/services/navigation_service.dart';
-import 'package:gastosrecorrentes/shared/text_styles.dart';
+import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 
@@ -22,7 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     scheduleCall(() {
       final billsViewModel = Provider.of<BillsViewModel>(context, listen: false);
-      billsViewModel.getRegisteredBills(context);
+      final usersViewModel = Provider.of<UsersViewModel>(context, listen: false);
+      try {
+        billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
+      } catch (e) {
+        if (mounted) showSnackBar(context, e.toString());
+      }
     });
   }
 
@@ -52,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         bill: billsViewModel.listBills[index],
                         onTap: () {
                           billsViewModel.setCurrentSelectedBill = billsViewModel.listBills[index];
+                          billsViewModel.generateCurrentBillInstallments();
                           openBillDetailsScreen(context);
                         },
                       ),

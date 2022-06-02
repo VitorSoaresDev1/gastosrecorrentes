@@ -5,6 +5,7 @@ import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
+import 'package:time_machine/time_machine.dart';
 
 class BillCard extends StatelessWidget {
   final Bill bill;
@@ -17,6 +18,7 @@ class BillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -59,7 +61,7 @@ class BillCard extends StatelessWidget {
                             ),
                             Text(
                                 MultiLanguage.translate("dueTo") +
-                                    ': ${DateHelper.formatDDMM(DateTime(DateTime.now().year, DateTime.now().month, bill.monthlydueDay!))}',
+                                    ': ${DateHelper.formatDDMM(LocalDate(now.year, now.month, bill.monthlydueDay!))}',
                                 style: TextStyles.bodySubtitle()),
                           ],
                         ),

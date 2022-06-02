@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "302532224933",
+    "project_id": "gastosrecorrentes",
+    "storage_bucket": "gastosrecorrentes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302532224933:android:fd27b9797b2143d457ea4c",
+        "android_client_info": {
+          "package_name": "com.example.gastosrecorrentes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302532224933-s3oebqcdrasbfdivieq70m7ekd7l03u4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gastosrecorrentes",
+            "certificate_hash": "d3c18f4cf946cc6c395f4300712f5b73c4e13cb8"
+          }
+        },
+        {
+          "client_id": "302532224933-ch9o3e6n945urnc4e3kvl1ej4ctoq2a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASlzz3JUK3kJAxS8RouSifsTUkZrx5-vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302532224933-ch9o3e6n945urnc4e3kvl1ej4ctoq2a2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "302532224933-kjc9tms7movp0ff0q295bofl5qdln51a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gastosrecorrentes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

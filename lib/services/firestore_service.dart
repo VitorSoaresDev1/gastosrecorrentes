@@ -28,8 +28,8 @@ class FireStoreService {
     }
   }
 
-  static Future addBill({
-    String name = '',
+  Future addBill({
+    String? name = '',
     String? userId,
     double? value,
     int? dueDay,
@@ -38,11 +38,13 @@ class FireStoreService {
     DateTime now = DateTime.now();
     try {
       await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).add(Bill(
-            name: name,
+            name: name!,
             userId: userId,
             value: value,
             monthlydueDay: dueDay,
             ammountMonths: ammountMonths,
+            barCode: {},
+            payments: {},
             startDate: DateTime(now.year, now.month, 1).subtract(const Duration(days: 90)).millisecondsSinceEpoch,
             isActive: true,
           ).toMap());
@@ -51,14 +53,17 @@ class FireStoreService {
     }
   }
 
-  static Future setBilltoInactive(Bill bill) async {
+  Future updateBill(Bill bill) async =>
+      FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).update(bill.toMap());
+
+  Future setBilltoInactive(Bill bill) async {
     FirebaseFirestore.instance
         .collection(FireStoreConstants.billsCollection)
         .doc(bill.id)
         .update(bill.copyWith(isActive: false).toMap());
   }
 
-  static Future<List<Bill>> getRegisteredBills({String? userId = ''}) async {
+  Future<List<Bill>> getRegisteredBills({String? userId = ''}) async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
           .collection(FireStoreConstants.billsCollection)

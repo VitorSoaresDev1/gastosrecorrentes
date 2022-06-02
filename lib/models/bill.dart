@@ -8,8 +8,8 @@ class Bill {
   String? userId;
   String name;
   double? value;
-  Map<List<int>, bool>? isPaid;
-  Map<List<int>, String>? barCode;
+  Map<String, bool> payments;
+  Map<String, String> barCode;
   int? monthlydueDay;
   int? startDate;
   int? ammountMonths;
@@ -20,8 +20,8 @@ class Bill {
     this.userId,
     required this.name,
     this.value,
-    this.isPaid,
-    this.barCode,
+    required this.payments,
+    required this.barCode,
     this.monthlydueDay,
     this.startDate,
     this.ammountMonths,
@@ -33,8 +33,8 @@ class Bill {
     String? userId,
     String? name,
     double? value,
-    Map<List<int>, bool>? isPaid,
-    Map<List<int>, String>? barCode,
+    Map<String, bool>? payments,
+    Map<String, String>? barCode,
     int? monthlydueDay,
     int? startDate,
     int? ammountMonths,
@@ -45,7 +45,7 @@ class Bill {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       value: value ?? this.value,
-      isPaid: isPaid ?? this.isPaid,
+      payments: payments ?? this.payments,
       barCode: barCode ?? this.barCode,
       monthlydueDay: monthlydueDay ?? this.monthlydueDay,
       startDate: startDate ?? this.startDate,
@@ -60,7 +60,7 @@ class Bill {
       'userId': userId,
       'name': name,
       'value': value,
-      'isPaid': isPaid,
+      'payments': payments,
       'barCode': barCode,
       'monthlydueDay': monthlydueDay,
       'startDate': startDate,
@@ -75,8 +75,8 @@ class Bill {
       userId: map['userId'],
       name: map['name'] ?? '',
       value: map['value']?.toDouble(),
-      isPaid: map['isPaid'] != null ? Map<List<int>, bool>.from(map['isPaid']) : null,
-      barCode: map['barCode'] != null ? Map<List<int>, String>.from(map['barCode']) : null,
+      payments: Map<String, bool>.from(map['payments']),
+      barCode: Map<String, String>.from(map['barCode']),
       monthlydueDay: map['monthlydueDay']?.toInt(),
       startDate: map['startDate']?.toInt(),
       ammountMonths: map['ammountMonths']?.toInt(),
@@ -90,7 +90,7 @@ class Bill {
 
   @override
   String toString() {
-    return 'Bill(id: $id, userId: $userId, name: $name, value: $value, isPaid: $isPaid, barCode: $barCode, monthlydueDay: $monthlydueDay, startDate: $startDate, ammountMonths: $ammountMonths, isActive: $isActive)';
+    return 'Bill(id: $id, userId: $userId, name: $name, value: $value, payments: $payments, barCode: $barCode, monthlydueDay: $monthlydueDay, startDate: $startDate, ammountMonths: $ammountMonths, isActive: $isActive)';
   }
 
   @override
@@ -102,7 +102,7 @@ class Bill {
         other.userId == userId &&
         other.name == name &&
         other.value == value &&
-        mapEquals(other.isPaid, isPaid) &&
+        mapEquals(other.payments, payments) &&
         mapEquals(other.barCode, barCode) &&
         other.monthlydueDay == monthlydueDay &&
         other.startDate == startDate &&
@@ -116,7 +116,7 @@ class Bill {
         userId.hashCode ^
         name.hashCode ^
         value.hashCode ^
-        isPaid.hashCode ^
+        payments.hashCode ^
         barCode.hashCode ^
         monthlydueDay.hashCode ^
         startDate.hashCode ^
@@ -129,7 +129,7 @@ class Bill {
     DateTime? duedate = DateTime(now.year, now.month, bill.monthlydueDay!);
     Duration difference = duedate.difference(DateTime(now.year, now.month, now.day, 0, 0, 0));
 
-    if (bill.isPaid?[0] == true) {
+    if (bill.payments.containsKey(duedate.toString())) {
       return Colors.green[800]?.withOpacity(.8);
     } else if (difference.inDays < 1) {
       return Colors.red[800]?.withOpacity(.8);
