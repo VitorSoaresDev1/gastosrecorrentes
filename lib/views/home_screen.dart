@@ -56,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         bill: billsViewModel.listBills[index],
                         onTap: () {
                           billsViewModel.setCurrentSelectedBill = billsViewModel.listBills[index];
-                          billsViewModel.generateCurrentBillInstallments();
                           openBillDetailsScreen(context);
                         },
                       ),
@@ -71,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-              //Text("Total: R\$  ", style: TextStyles.titles()),
             ],
           ),
         ),

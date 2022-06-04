@@ -31,18 +31,17 @@ void main() {
     });
   });
 
-  group('Test generateCurrentBillInstallments Method:', () {
+  group('Test generateBillInstallments Method:', () {
     test('Should apply installments to currentBillInstallments', () async {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
       Bill billToTest = createMockBill();
       viewModel.setCurrentSelectedBill = billToTest;
-      viewModel.generateCurrentBillInstallments();
+      List<Installment> installments = viewModel.generateBillInstallments(billToTest);
       expect(viewModel.currentSelectedBill == billToTest, true);
-      expect(viewModel.currentBillInstallments!.length == 10, true);
-      expect(viewModel.currentBillInstallments![viewModel.currentBillInstallments!.length - 1].isPaid, true);
+      expect(installments.length == 10, true);
     });
 
-    test('currentbill has 0 ammountMonths should generate difference months from start +1', () async {
+    test('currentbill has 0 ammountMonths should generate difference months from start +2', () async {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
       Bill billToTest = createMockBill().copyWith(ammountMonths: 0);
 
@@ -51,15 +50,9 @@ void main() {
       Period diff = LocalDate.today().periodSince(start);
 
       viewModel.setCurrentSelectedBill = billToTest;
-      viewModel.generateCurrentBillInstallments();
+      List<Installment> installments = viewModel.generateBillInstallments(billToTest);
       expect(viewModel.currentSelectedBill == billToTest, true);
-      expect(viewModel.currentBillInstallments!.length == diff.months + 1, true);
-    });
-    test('currentBillInstallments null if currentBill is also null', () async {
-      BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
-      viewModel.generateCurrentBillInstallments();
-      expect(viewModel.currentSelectedBill == null, true);
-      expect(viewModel.currentBillInstallments == null, true);
+      expect(installments.length == diff.months + 2, true);
     });
   });
 
@@ -101,13 +94,7 @@ void main() {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
       Bill billToTest = createMockBill();
 
-      when(fakeFireStore.addBill(
-        name: anyNamed('name'),
-        ammountMonths: anyNamed('ammountMonths'),
-        dueDay: anyNamed('dueDay'),
-        value: anyNamed('value'),
-        userId: anyNamed('userId'),
-      )).thenAnswer((_) async => null);
+      when(fakeFireStore.addBill(any)).thenAnswer((_) async => null);
 
       when(fakeFireStore.getRegisteredBills(userId: anyNamed('userId')))
           .thenAnswer((_) async => [createMockBill(), createMockBill().copyWith(ammountMonths: 1)]);
@@ -133,8 +120,9 @@ void main() {
       MockFireStoreService fakeFireStore = MockFireStoreService();
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
       Bill billToTest = createMockBill();
-      viewModel.currentSelectedBill = billToTest;
       Installment installment = createMockInstallment();
+      billToTest.installments = [installment];
+      viewModel.currentSelectedBill = billToTest;
 
       when(fakeFireStore.getRegisteredBills(userId: anyNamed('userId')))
           .thenAnswer((_) async => [billToTest, billToTest.copyWith(ammountMonths: 1)]);
@@ -147,7 +135,11 @@ void main() {
 
       expect(viewModel.listBills.contains(billToTest), true);
       expect(viewModel.listBills.length == 1, true);
-      expect(viewModel.currentSelectedBill!.payments.containsKey(installment.dueDate.toString()), true);
+      expect(
+          viewModel.currentSelectedBill!.installments!
+              .where((element) => element.dueDate == installment.dueDate && element.isPaid)
+              .isNotEmpty,
+          true);
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
       verify(fakeFireStore.updateBill(any)).called(1);
     });
@@ -155,8 +147,9 @@ void main() {
 }
 
 Installment createMockInstallment() {
+  DateTime now = DateTime.now();
   return Installment(
-    dueDate: DateTime.now().add(const Duration(days: 1)),
+    dueDate: DateTime(now.year, now.month, now.day),
     index: 1,
     isLate: false,
     isPaid: false,
@@ -175,9 +168,6 @@ Bill createMockBill() {
     monthlydueDay: 5,
     startDate: DateTime(now.year, now.month, 1).subtract(const Duration(days: 90)).millisecondsSinceEpoch,
     value: 123,
-    barCode: {},
-    payments: {
-      '${DateTime(now.year, now.month, 5)}': true,
-    },
+    installments: [],
   );
 }

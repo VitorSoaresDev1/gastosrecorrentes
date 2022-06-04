@@ -61,24 +61,26 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
             ButtonWithLoading(
               isLoading: billsViewModel.loading,
               title: MultiLanguage.translate("createBill"),
-              onPressed: () async {
-                try {
-                  if (createBillFormKey.currentState!.validate()) {
-                    await billsViewModel.addNewBill(
-                      userId: usersViewModel.user!.id!,
-                      name: _nameController.text,
-                      value: _valueController.text,
-                      dueDay: _dueDayController.text,
-                      amountMonths: _amountMonthsController.text,
-                    );
-                    await billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
-                    showSnackBar(context, MultiLanguage.translate("createdBillSuccessfully"));
-                    Navigator.pop(context);
-                  }
-                } catch (e) {
-                  showSnackBar(context, e.toString());
-                }
-              },
+              onPressed: !billsViewModel.loading
+                  ? () async {
+                      try {
+                        if (createBillFormKey.currentState!.validate()) {
+                          await billsViewModel.addNewBill(
+                            userId: usersViewModel.user!.id!,
+                            name: _nameController.text,
+                            value: _valueController.text,
+                            dueDay: _dueDayController.text,
+                            amountMonths: _amountMonthsController.text,
+                          );
+                          await billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
+                          showSnackBar(context, MultiLanguage.translate("createdBillSuccessfully"));
+                          Navigator.pop(context);
+                        }
+                      } catch (e) {
+                        showSnackBar(context, e.toString());
+                      }
+                    }
+                  : null,
             ),
           ],
         ),

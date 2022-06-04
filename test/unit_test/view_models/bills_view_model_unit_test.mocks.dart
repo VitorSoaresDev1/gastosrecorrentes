@@ -27,20 +27,8 @@ class MockFireStoreService extends _i1.Mock implements _i2.FireStoreService {
   }
 
   @override
-  _i3.Future<dynamic> addBill(
-          {String? name = r'',
-          String? userId,
-          double? value,
-          int? dueDay,
-          int? ammountMonths}) =>
-      (super.noSuchMethod(
-          Invocation.method(#addBill, [], {
-            #name: name,
-            #userId: userId,
-            #value: value,
-            #dueDay: dueDay,
-            #ammountMonths: ammountMonths
-          }),
+  _i3.Future<dynamic> addBill(_i4.Bill? bill) =>
+      (super.noSuchMethod(Invocation.method(#addBill, [bill]),
           returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
   @override
   _i3.Future<dynamic> updateBill(_i4.Bill? bill) =>
