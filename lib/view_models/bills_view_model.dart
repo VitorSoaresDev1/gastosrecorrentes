@@ -34,39 +34,6 @@ class BillsViewModel extends ChangeNotifier {
 
   void setListBills(List<Bill> listBills) => _listBills = listBills;
 
-  // void generateCurrentBillInstallments() {
-  //   if (currentSelectedBill == null) return;
-  //   DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(currentSelectedBill!.startDate!);
-  //   LocalDate start = LocalDate(dateAux.year, dateAux.month, currentSelectedBill!.monthlydueDay!);
-  //   Period diff = LocalDate.today().periodSince(start);
-
-  //   int numberOfInstallments =
-  //       (currentSelectedBill!.ammountMonths! == 0) ? diff.months + 1 : currentSelectedBill!.ammountMonths!;
-  //   List<Installment> installments = [];
-  //   for (int x = 0; x < numberOfInstallments; x++) {
-  //     LocalDate dueDate = LocalDate(dateAux.year, dateAux.month, currentSelectedBill!.monthlydueDay!).addMonths(x);
-  //     bool isPaid = currentSelectedBill!.payments.containsKey(dueDate.toDateTimeUnspecified().toString());
-  //     bool isLate = dueDate.compareTo(LocalDate.today()) < 0 && !isPaid;
-  //     installments.add(
-  //       Installment(
-  //         index: x + 1,
-  //         dueDate: dueDate.toDateTimeUnspecified(),
-  //         price: currentSelectedBill!.value!,
-  //         isLate: isLate,
-  //         isPaid: isPaid,
-  //       ),
-  //     );
-  //   }
-  //   installments.sort((a, b) {
-  //     if (a.isPaid == b.isPaid) {
-  //       return a.dueDate.compareTo(b.dueDate);
-  //     } else {
-  //       return b.isPaid ? -1 : 1;
-  //     }
-  //   });
-  //   currentBillInstallments = installments;
-  // }
-
   Future getRegisteredBills(String userId) async {
     try {
       setLoading(true);
