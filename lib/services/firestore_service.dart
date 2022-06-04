@@ -28,26 +28,9 @@ class FireStoreService {
     }
   }
 
-  Future addBill({
-    String? name = '',
-    String? userId,
-    double? value,
-    int? dueDay,
-    int? ammountMonths,
-  }) async {
-    DateTime now = DateTime.now();
+  Future addBill(Bill bill) async {
     try {
-      await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).add(Bill(
-            name: name!,
-            userId: userId,
-            value: value,
-            monthlydueDay: dueDay,
-            ammountMonths: ammountMonths,
-            barCode: {},
-            payments: {},
-            startDate: DateTime(now.year, now.month, 1).subtract(const Duration(days: 90)).millisecondsSinceEpoch,
-            isActive: true,
-          ).toMap());
+      await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).add(bill.toMap());
     } catch (e) {
       rethrow;
     }
