@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:time_machine/time_machine.dart';
 
-import 'package:gastosrecorrentes/components/bill_details/installment_card.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/components/dialogs/pay_installment_dialog.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
@@ -92,8 +92,9 @@ class BillsViewModel extends ChangeNotifier {
           a.installments!.where((element) => element.dueDate == aMonthInstallment && element.isPaid).isNotEmpty;
       bool bIsPaid =
           b.installments!.where((element) => element.dueDate == bMonthInstallment && element.isPaid).isNotEmpty;
+
       if (aIsPaid == bIsPaid) {
-        return b.monthlydueDay!.compareTo(a.monthlydueDay!);
+        return a.installments![0].dueDate.compareTo(b.installments![0].dueDate);
       } else {
         return bIsPaid ? -1 : 1;
       }
@@ -173,7 +174,7 @@ class BillsViewModel extends ChangeNotifier {
           duration: const Duration(milliseconds: 500),
         );
         try {
-          await payInstallment(installmentCard.installment!, userId);
+          await payInstallment(context, installmentCard, userId);
           animatedListKey.currentState?.insertItem(
             (currentSelectedBill?.installments!.length ?? 0) - 1,
           );
@@ -187,21 +188,34 @@ class BillsViewModel extends ChangeNotifier {
     });
   }
 
-  Future payInstallment(Installment installment, String userId) async {
+  Future payInstallment(BuildContext context, InstallmentCard installmentCard, String userId) async {
     setLoading(true);
     Bill bill = currentSelectedBill!;
     try {
-      int index = bill.installments!.indexOf(installment);
+      int index = bill.installments!.indexOf(installmentCard.installment);
       if (index >= 0) {
+        animatedListKey.currentState?.removeItem(
+          installmentCard.index,
+          (context, animation) => InstallmentCard(
+            animation: animation,
+            index: installmentCard.index,
+            installment: installmentCard.installment,
+          ),
+          duration: const Duration(milliseconds: 500),
+        );
         bill.installments![index].isPaid = true;
         bill.installments!.sort((a, b) => paidsLastThenByDate(a, b));
         await fireStoreService.updateBill(bill);
+
+        animatedListKey.currentState?.insertItem(
+          (currentSelectedBill?.installments!.length ?? 0) - 1,
+        );
       }
     } catch (e) {
-      int index = bill.installments!.indexOf(installment);
+      int index = bill.installments!.indexOf(installmentCard.installment);
       bill.installments![index].isPaid = false;
       bill.installments!.sort((a, b) => paidsLastThenByDate(a, b));
-      rethrow;
+      showSnackBar(context, e.toString());
     } finally {
       await getRegisteredBills(userId);
       setLoading(false);

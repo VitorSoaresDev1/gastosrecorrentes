@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? Expanded(
                       child: ListView.separated(
                       itemCount: billsViewModel.listBills.length,
-                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 8),
+                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
                       itemBuilder: (context, index) => BillCard(
                         bill: billsViewModel.listBills[index],
                         onTap: () {

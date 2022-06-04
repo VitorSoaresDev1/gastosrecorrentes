@@ -47,12 +47,12 @@ class BillSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          MultiLanguage.translate("start") + ": " + DateHelper.formatDDMMYYYY(startDate),
+          MultiLanguage.translate("start") + ": " + DateHelper.formatMMYY(startDate),
           style: TextStyles.bodyText(light: true),
         ),
         if (currentBill.ammountMonths! > 0)
           Text(
-            MultiLanguage.translate("end") + ": " + DateHelper.formatDDMMYYYY(endDate),
+            MultiLanguage.translate("end") + ": " + DateHelper.formatMMYY(endDate),
             style: TextStyles.bodyText(light: true),
           ),
       ],
@@ -67,32 +67,35 @@ class BillSummary extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              MultiLanguage.translate("active") +
-                  ": " +
-                  MultiLanguage.translate(currentBill.isActive ?? false ? "yes" : "no"),
+              MultiLanguage.translate("active") + ": ",
               style: TextStyles.bodyText(light: true),
             ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              MultiLanguage.translate("value") + ": ",
-              style: TextStyles.bodyText(light: true),
-            ),
-            const SizedBox(width: 2),
-            const Icon(
-              FontAwesomeIcons.brazilianRealSign,
-              size: 14,
+            Icon(
+              (currentBill.isActive ?? false) ? FontAwesomeIcons.check : FontAwesomeIcons.xmark,
               color: Colors.white,
-            ),
-            Text(
-              " " + CurrencyHelper.formatDouble(currentBill.value),
-              style: TextStyles.bodyText(light: true),
-            ),
+              size: 16,
+            )
           ],
         ),
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Text(
+        //       MultiLanguage.translate("value") + ": ",
+        //       style: TextStyles.bodyText(light: true),
+        //     ),
+        //     const SizedBox(width: 2),
+        //     const Icon(
+        //       FontAwesomeIcons.brazilianRealSign,
+        //       size: 14,
+        //       color: Colors.white,
+        //     ),
+        //     Text(
+        //       " " + CurrencyHelper.formatDouble(currentBill.value),
+        //       style: TextStyles.bodyText(light: true),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
@@ -124,6 +127,10 @@ class BillSummary extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                MultiLanguage.translate("paid") + ": ",
+                style: TextStyles.bodyText(light: true),
+              ),
               const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
               Text(
                 " " + CurrencyHelper.formatDouble(paidSoFar),

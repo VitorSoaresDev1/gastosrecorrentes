@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/bill_details/bill_summary.dart';
-import 'package:gastosrecorrentes/components/bill_details/installments_animated_list.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installments_animated_list.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:provider/provider.dart';

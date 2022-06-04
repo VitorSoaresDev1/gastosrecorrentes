@@ -31,4 +31,11 @@ class DateHelper {
     String formattedDate = StringHelper.capitalizeFirst(DateFormat.yMd('PT_BR').format(date.toDateTimeUnspecified()));
     return formattedDate;
   }
+
+  static String formatMMYY(LocalDate? date) {
+    if (date == null) return '-/-';
+    initializeDateFormatting();
+    String formattedDate = StringHelper.capitalizeFirst(DateFormat.yM('PT_BR').format(date.toDateTimeUnspecified()));
+    return formattedDate.replaceAll("/20", "/");
+  }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
 import 'package:gastosrecorrentes/services/firestore_service.dart';
@@ -119,8 +121,11 @@ void main() {
     test('Should update exact installment to paid equals true', () async {
       MockFireStoreService fakeFireStore = MockFireStoreService();
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
+      BuildContext context = MockBuildContext();
       Bill billToTest = createMockBill();
       Installment installment = createMockInstallment();
+      InstallmentCard installmentCard = InstallmentCard(animation: MockAnimation(), index: 1, installment: installment);
+
       billToTest.installments = [installment];
       viewModel.currentSelectedBill = billToTest;
 
@@ -131,15 +136,17 @@ void main() {
 
       when(fakeFireStore.updateBill(any)).thenAnswer((_) async => null);
 
-      await viewModel.payInstallment(installment, '123');
+      await viewModel.payInstallment(context, installmentCard, '123');
 
       expect(viewModel.listBills.contains(billToTest), true);
       expect(viewModel.listBills.length == 1, true);
       expect(
-          viewModel.currentSelectedBill!.installments!
-              .where((element) => element.dueDate == installment.dueDate && element.isPaid)
-              .isNotEmpty,
-          true);
+        viewModel.currentSelectedBill!.installments!
+            .where((element) => element.dueDate == installment.dueDate && element.isPaid)
+            .isNotEmpty,
+        true,
+      );
+
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
       verify(fakeFireStore.updateBill(any)).called(1);
     });
@@ -171,3 +178,7 @@ Bill createMockBill() {
     installments: [],
   );
 }
+
+class MockBuildContext extends Mock implements BuildContext {}
+
+class MockAnimation extends Mock implements Animation<double> {}
