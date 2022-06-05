@@ -4,7 +4,7 @@ import 'package:gastosrecorrentes/helpers/currency_helper.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:provider/provider.dart';
@@ -123,21 +123,20 @@ class BillSummary extends StatelessWidget {
               ": ${installmentsPaid.length} / ${currentBill.installments!.length}",
           style: TextStyles.bodyText(light: true),
         ),
-        if (installmentsPaid.isNotEmpty)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                MultiLanguage.translate("paid") + ": ",
-                style: TextStyles.bodyText(light: true),
-              ),
-              const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
-              Text(
-                " " + CurrencyHelper.formatDouble(paidSoFar),
-                style: TextStyles.bodyText(light: true),
-              ),
-            ],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              MultiLanguage.translate("paid") + ": ",
+              style: TextStyles.bodyText(light: true),
+            ),
+            const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
+            Text(
+              " " + CurrencyHelper.formatDouble(paidSoFar),
+              style: TextStyles.bodyText(light: true),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -149,16 +148,10 @@ class BillSummary extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              MultiLanguage.translate("total") + ": ",
-              style: TextStyles.bodyText(light: true),
-            ),
+            Text(MultiLanguage.translate("total") + ": ", style: TextStyles.bodyText(light: true)),
             const SizedBox(width: 2),
             const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
-            Text(
-              " ${CurrencyHelper.formatDouble(totalValue)}",
-              style: TextStyles.bodyText(light: true),
-            ),
+            Text(" ${CurrencyHelper.formatDouble(totalValue)}", style: TextStyles.bodyText(light: true)),
           ],
         ),
         if (installmentsPaid.isNotEmpty)

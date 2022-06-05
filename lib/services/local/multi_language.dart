@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:gastosrecorrentes/services/locator.dart';
+import 'package:gastosrecorrentes/services/local/locator.dart';
 
 class MultiLanguage {
   Map<String, dynamic> languageMap = {};

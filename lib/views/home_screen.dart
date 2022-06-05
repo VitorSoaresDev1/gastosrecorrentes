@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
+import 'package:gastosrecorrentes/components/shared/loading_widget.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
-import 'package:gastosrecorrentes/services/navigation_service.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/navigation_service.dart';
+import 'package:gastosrecorrentes/services/remote/status.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
@@ -18,15 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    scheduleCall(() {
+    scheduleCall(() async {
       final billsViewModel = Provider.of<BillsViewModel>(context, listen: false);
       final usersViewModel = Provider.of<UsersViewModel>(context, listen: false);
-      try {
-        billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
-      } catch (e) {
-        if (mounted) showSnackBar(context, e.toString());
-      }
+      billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
     });
   }
 
@@ -42,35 +39,29 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              !billsViewModel.loading
-                  ? Expanded(
-                      child: ListView.separated(
-                      itemCount: billsViewModel.listBills.length,
-                      separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) => BillCard(
-                        bill: billsViewModel.listBills[index],
-                        onTap: () {
-                          billsViewModel.setCurrentSelectedBill = billsViewModel.listBills[index];
-                          openBillDetailsScreen(context);
-                        },
-                      ),
-                    ))
-                  : const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 100),
-                        child: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
+          child: Builder(
+            builder: ((context) {
+              switch (billsViewModel.listBills.status) {
+                case Status.loading:
+                  return const LoadingWidget();
+                case Status.error:
+                  return Container();
+                case Status.completed:
+                  return ListView.separated(
+                    itemCount: billsViewModel.listBills.data!.length,
+                    separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) => BillCard(
+                      bill: billsViewModel.listBills.data![index],
+                      onTap: () {
+                        billsViewModel.setCurrentSelectedBill = billsViewModel.listBills.data![index];
+                        openBillDetailsScreen(context);
+                      },
                     ),
-            ],
+                  );
+                default:
+              }
+              return Container();
+            }),
           ),
         ),
       ),

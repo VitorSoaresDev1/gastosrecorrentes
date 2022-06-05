@@ -4,7 +4,7 @@ import 'package:gastosrecorrentes/helpers/currency_helper.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:time_machine/time_machine.dart';
 

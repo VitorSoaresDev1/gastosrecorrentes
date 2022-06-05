@@ -6,7 +6,7 @@ import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
 import 'package:gastosrecorrentes/helpers/currency_helper.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:provider/provider.dart';

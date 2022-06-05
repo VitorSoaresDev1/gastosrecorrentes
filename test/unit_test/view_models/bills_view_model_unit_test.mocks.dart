@@ -5,7 +5,7 @@
 import 'dart:async' as _i3;
 
 import 'package:gastosrecorrentes/models/bill.dart' as _i4;
-import 'package:gastosrecorrentes/services/firestore_service.dart' as _i2;
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -28,20 +28,18 @@ class MockFireStoreService extends _i1.Mock implements _i2.FireStoreService {
 
   @override
   _i3.Future<dynamic> addBill(_i4.Bill? bill) =>
-      (super.noSuchMethod(Invocation.method(#addBill, [bill]),
-          returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
+      (super.noSuchMethod(Invocation.method(#addBill, [bill]), returnValue: Future<dynamic>.value())
+          as _i3.Future<dynamic>);
   @override
   _i3.Future<dynamic> updateBill(_i4.Bill? bill) =>
-      (super.noSuchMethod(Invocation.method(#updateBill, [bill]),
-          returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
+      (super.noSuchMethod(Invocation.method(#updateBill, [bill]), returnValue: Future<dynamic>.value())
+          as _i3.Future<dynamic>);
   @override
   _i3.Future<dynamic> setBilltoInactive(_i4.Bill? bill) =>
-      (super.noSuchMethod(Invocation.method(#setBilltoInactive, [bill]),
-          returnValue: Future<dynamic>.value()) as _i3.Future<dynamic>);
+      (super.noSuchMethod(Invocation.method(#setBilltoInactive, [bill]), returnValue: Future<dynamic>.value())
+          as _i3.Future<dynamic>);
   @override
   _i3.Future<List<_i4.Bill>> getRegisteredBills({String? userId = r''}) =>
-      (super.noSuchMethod(
-              Invocation.method(#getRegisteredBills, [], {#userId: userId}),
-              returnValue: Future<List<_i4.Bill>>.value(<_i4.Bill>[]))
-          as _i3.Future<List<_i4.Bill>>);
+      (super.noSuchMethod(Invocation.method(#getRegisteredBills, [], {#userId: userId}),
+          returnValue: Future<List<_i4.Bill>>.value(<_i4.Bill>[])) as _i3.Future<List<_i4.Bill>>);
 }

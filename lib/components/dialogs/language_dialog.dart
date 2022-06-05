@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gastosrecorrentes/services/shared_preferences.dart';
+import 'package:gastosrecorrentes/services/local/shared_preferences.dart';
 import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 import 'package:provider/provider.dart';
 

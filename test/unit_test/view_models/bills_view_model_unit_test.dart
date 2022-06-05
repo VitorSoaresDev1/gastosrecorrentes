@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/firestore_service.dart';
+import 'package:gastosrecorrentes/services/remote/api_response.dart';
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:time_machine/time_machine.dart';
@@ -26,10 +27,10 @@ void main() {
     test('Should apply new value to listBills', () async {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
       Bill billToTest = createMockBill();
-      viewModel.setListBills([billToTest]);
+      viewModel.setListBills(ApiResponse.completed([billToTest]));
 
-      expect(viewModel.listBills.length == 1, true);
-      expect(viewModel.listBills[0] == billToTest, true);
+      expect(viewModel.listBills.data!.length == 1, true);
+      expect(viewModel.listBills.data![0] == billToTest, true);
     });
   });
 
@@ -71,8 +72,8 @@ void main() {
 
       await viewModel.getRegisteredBills('123');
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
     });
 
@@ -86,7 +87,7 @@ void main() {
 
       await viewModel.getRegisteredBills('123');
 
-      expect(viewModel.listBills.isEmpty, true);
+      expect(viewModel.listBills.data!.isEmpty, true);
       verifyNever(fakeFireStore.setBilltoInactive(any));
     });
   });
@@ -111,8 +112,8 @@ void main() {
         value: billToTest.value.toString(),
       );
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
     });
   });
@@ -138,8 +139,8 @@ void main() {
 
       await viewModel.payInstallment(context, installmentCard, '123');
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       expect(
         viewModel.currentSelectedBill!.installments!
             .where((element) => element.dueDate == installment.dueDate && element.isPaid)

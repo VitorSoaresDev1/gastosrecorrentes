@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 
 class ResetPasswordDialog extends StatefulWidget {
   const ResetPasswordDialog({Key? key}) : super(key: key);

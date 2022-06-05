@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/language_dialog.dart';
-import 'package:gastosrecorrentes/services/locator.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/locator.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:provider/provider.dart';
 
-import '../services/shared_preferences.dart';
+import '../services/local/shared_preferences.dart';
 
 class InitAppViewModel extends ChangeNotifier {
   bool _loading = true;

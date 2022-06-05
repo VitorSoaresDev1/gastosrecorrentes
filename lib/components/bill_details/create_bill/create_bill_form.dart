@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 
 class CreateBillForm extends StatelessWidget {
   final TextEditingController nameController;

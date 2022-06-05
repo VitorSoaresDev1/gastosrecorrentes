@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/bill_details/create_bill/create_bill_form.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';

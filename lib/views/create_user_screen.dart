@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';

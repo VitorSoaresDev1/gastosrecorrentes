@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/reset_password_dialog.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/models/user.dart';
-import 'package:gastosrecorrentes/services/firestore_service.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
-import 'package:gastosrecorrentes/services/navigation_service.dart';
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/navigation_service.dart';
 
 class UsersViewModel extends ChangeNotifier {
   AppUser? user;

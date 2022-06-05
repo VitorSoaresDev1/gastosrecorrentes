@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
+import 'package:gastosrecorrentes/services/remote/api_response.dart';
 import 'package:time_machine/time_machine.dart';
 
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
-import 'package:gastosrecorrentes/components/dialogs/pay_installment_dialog.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/firestore_service.dart';
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 
 class BillsViewModel extends ChangeNotifier {
   final GlobalKey<AnimatedListState> animatedListKey = GlobalKey<AnimatedListState>();
   FireStoreService fireStoreService;
   bool _loading = false;
-  List<Bill> _listBills = [];
   Bill? currentSelectedBill;
+  ApiResponse<List<Bill>> _listBills = ApiResponse.loading();
 
-  BillsViewModel({
-    required this.fireStoreService,
-  }) {
+  BillsViewModel({required this.fireStoreService}) {
     fireStoreService = fireStoreService;
   }
 
   bool get loading => _loading;
-  List<Bill> get listBills => _listBills;
+  ApiResponse<List<Bill>> get listBills => _listBills;
 
   void setLoading(bool loading) {
     _loading = loading;
@@ -32,37 +30,57 @@ class BillsViewModel extends ChangeNotifier {
 
   set setCurrentSelectedBill(Bill bill) => currentSelectedBill = bill;
 
-  void setListBills(List<Bill> listBills) => _listBills = listBills;
+  void setListBills(ApiResponse<List<Bill>> response) => _listBills = response;
 
   Future getRegisteredBills(String userId) async {
     try {
       setLoading(true);
       List<Bill> bills = await fireStoreService.getRegisteredBills(userId: userId);
-      bills.removeWhere((bill) {
-        DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(bill.startDate!);
-        LocalDate start = LocalDate(dateAux.year, dateAux.month, bill.monthlydueDay!);
-        Period diff = LocalDate.today().periodSince(start);
-        int monthsPassed = diff.months;
-        if (monthsPassed > bill.ammountMonths! && bill.ammountMonths != 0) {
-          fireStoreService.setBilltoInactive(bill);
-          return true;
-        }
-        return false;
-      });
+      _removeInactiveBills(bills);
 
-      addInstallmentsForOnGoingBills(bills);
+      await _updateInstallmentIsLateStatus(bills, userId);
 
-      sortBills(bills);
+      _addInstallmentsForOnGoingBills(bills);
 
-      setListBills(bills);
+      _sortBills(bills);
+
+      setListBills(ApiResponse.completed(bills));
     } catch (e) {
-      rethrow;
+      setListBills(ApiResponse.error(e.toString()));
     } finally {
       setLoading(false);
     }
   }
 
-  void addInstallmentsForOnGoingBills(List<Bill> bills) {
+  Future<void> _updateInstallmentIsLateStatus(List<Bill> bills, String userId) async {
+    bool updated = false;
+    for (Bill bill in bills) {
+      for (Installment installment in bill.installments!) {
+        if (installment.dueDate.compareTo(DateTime.now()) < 0 && !installment.isLate) {
+          installment.isLate = true;
+          await fireStoreService.updateBill(bill);
+          updated = true;
+        }
+      }
+    }
+    if (updated) await getRegisteredBills(userId);
+  }
+
+  void _removeInactiveBills(List<Bill> bills) {
+    return bills.removeWhere((bill) {
+      DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(bill.startDate!);
+      LocalDate start = LocalDate(dateAux.year, dateAux.month, bill.monthlydueDay!);
+      Period diff = LocalDate.today().periodSince(start);
+      int monthsPassed = diff.months;
+      if (monthsPassed > bill.ammountMonths! && bill.ammountMonths != 0) {
+        fireStoreService.setBilltoInactive(bill);
+        return true;
+      }
+      return false;
+    });
+  }
+
+  void _addInstallmentsForOnGoingBills(List<Bill> bills) {
     bills.where((bill) => bill.ammountMonths == 0).toList().forEach((bill) {
       DateTime now = DateTime.now();
       DateTime currentMonthInstallment = DateTime(now.year, now.month, bill.monthlydueDay!);
@@ -83,7 +101,7 @@ class BillsViewModel extends ChangeNotifier {
     });
   }
 
-  void sortBills(List<Bill> bills) {
+  void _sortBills(List<Bill> bills) {
     DateTime now = DateTime.now();
     bills.sort((a, b) {
       DateTime aMonthInstallment = DateTime(now.year, now.month, a.monthlydueDay!);
@@ -159,33 +177,6 @@ class BillsViewModel extends ChangeNotifier {
     }
     installments.sort((a, b) => paidsLastThenByDate(a, b));
     return installments;
-  }
-
-  Future payInstallmentDialog(BuildContext context, InstallmentCard installmentCard, String userId) async {
-    return showDialog(context: context, builder: (context) => const PayInstallmentDialog()).then((value) async {
-      if (value) {
-        animatedListKey.currentState?.removeItem(
-          installmentCard.index,
-          (context, animation) => InstallmentCard(
-            animation: animation,
-            index: installmentCard.index,
-            installment: installmentCard.installment,
-          ),
-          duration: const Duration(milliseconds: 500),
-        );
-        try {
-          await payInstallment(context, installmentCard, userId);
-          animatedListKey.currentState?.insertItem(
-            (currentSelectedBill?.installments!.length ?? 0) - 1,
-          );
-        } catch (e) {
-          animatedListKey.currentState?.insertItem(
-            installmentCard.index,
-          );
-          showSnackBar(context, e.toString());
-        }
-      }
-    });
   }
 
   Future updateInstallmentPrice(Installment installment, String value) async {
