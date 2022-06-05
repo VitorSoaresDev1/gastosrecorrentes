@@ -34,6 +34,7 @@
     "attach": "Attach proof of payment",
     "changePrice": "Change price",
     "paid": "Paid",
+    "newValue": "New value",
     "ENTER_VALID_NAME": "Enter a valid name",
     "ENTER_VALID_EMAIL": "Enter a valid e-mail address",
     "EMAIL_DOESNT_MATCH": "The e-mails must match",

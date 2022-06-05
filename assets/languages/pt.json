@@ -34,6 +34,7 @@
     "attach": "Anexar comprovante",
     "changePrice": "Alterar valor",
     "paid": "Pago",
+    "newValue": "Valor atualizado",
     "ENTER_VALID_NAME": "Insira um nome válido",
     "ENTER_VALID_EMAIL": "Insira um email válido",
     "EMAIL_DOESNT_MATCH": "Os e-mails devem ser iguais",

@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gastosrecorrentes/helpers/currency_helper.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
+import 'package:gastosrecorrentes/models/installment.dart';
 import 'package:gastosrecorrentes/services/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:time_machine/time_machine.dart';
@@ -19,16 +20,18 @@ class BillCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
+    DateTime? duedate = DateTime(now.year, now.month, bill.monthlydueDay!);
+    Installment currentInstallment = _getCurrentMonthInstallment(duedate);
     return Stack(
       children: [
         Container(
-          height: 70,
+          height: 71,
           decoration: BoxDecoration(
             color: Bill.getCurrentBillListTileColor(context, bill),
             border: Border.all(color: Colors.grey, width: .3),
             borderRadius: const BorderRadius.only(
               bottomRight: Radius.circular(10),
-              bottomLeft: Radius.circular(13),
+              bottomLeft: Radius.circular(14),
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
             ),
@@ -72,7 +75,7 @@ class BillCard extends StatelessWidget {
                                     const SizedBox(width: 2),
                                     const Icon(FontAwesomeIcons.brazilianRealSign, size: 14),
                                     Text(
-                                      " " + CurrencyHelper.formatDouble(bill.installments![0].price),
+                                      " " + CurrencyHelper.formatDouble(currentInstallment.price),
                                       style: TextStyles.bodyText(),
                                     ),
                                   ],
@@ -100,4 +103,7 @@ class BillCard extends StatelessWidget {
       ],
     );
   }
+
+  Installment _getCurrentMonthInstallment(DateTime duedate) =>
+      bill.installments!.firstWhere((element) => element.dueDate == duedate, orElse: () => bill.installments![0]);
 }

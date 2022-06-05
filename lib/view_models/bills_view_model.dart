@@ -188,6 +188,18 @@ class BillsViewModel extends ChangeNotifier {
     });
   }
 
+  Future updateInstallmentPrice(Installment installment, String value) async {
+    double parsedValue = double.tryParse(value.replaceAll(",", ".")) ?? 0;
+    setLoading(true);
+    for (Installment i in currentSelectedBill!.installments!) {
+      if (i == installment) {
+        i.price = parsedValue;
+      }
+    }
+    await fireStoreService.updateBill(currentSelectedBill!);
+    setLoading(false);
+  }
+
   Future payInstallment(BuildContext context, InstallmentCard installmentCard, String userId) async {
     setLoading(true);
     Bill bill = currentSelectedBill!;

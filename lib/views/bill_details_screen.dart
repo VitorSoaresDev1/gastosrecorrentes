@@ -15,6 +15,7 @@ class BillDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(currentBill.name), elevation: 0),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: true,
         child: Stack(

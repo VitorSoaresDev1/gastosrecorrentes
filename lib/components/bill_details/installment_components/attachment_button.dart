@@ -23,9 +23,9 @@ class AttachmentButton extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               primary: Colors.white,
               elevation: 4,
-              side: BorderSide(
+              side: const BorderSide(
                 width: 1,
-                color: installment!.isPaid ? Colors.grey : Colors.white,
+                color: Colors.white,
               ),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               textStyle: TextStyles.bodySubtitle(light: true),

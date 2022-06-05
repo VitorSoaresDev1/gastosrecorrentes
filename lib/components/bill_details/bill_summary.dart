@@ -34,11 +34,6 @@ class BillSummary extends StatelessWidget {
     );
   }
 
-  double extractPaidSoFarInfo(List<Installment> installmentsPaid) {
-    if (installmentsPaid.isEmpty) return 0;
-    return installmentsPaid.map((i) => i.price).reduce((value, price) => value + price);
-  }
-
   Row _dateTile(Bill currentBill) {
     DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(currentBill.startDate!);
     LocalDate startDate = LocalDate(dateAux.year, dateAux.month, currentBill.monthlydueDay!);
@@ -101,9 +96,9 @@ class BillSummary extends StatelessWidget {
   }
 
   Widget _pricesTiles(Bill currentBill) {
-    double totalValue = (currentBill.value! * currentBill.ammountMonths!);
+    double totalValue = extractTotalPriceFrom(currentBill.installments!);
     List<Installment> installmentsPaid = currentBill.installments!.where((installment) => installment.isPaid).toList();
-    double paidSoFar = extractPaidSoFarInfo(installmentsPaid);
+    double paidSoFar = extractTotalPriceFrom(installmentsPaid);
 
     return Column(
       children: [
@@ -112,6 +107,11 @@ class BillSummary extends StatelessWidget {
         if (currentBill.ammountMonths! > 0) _totalAndRemainingTile(totalValue, installmentsPaid, paidSoFar),
       ],
     );
+  }
+
+  double extractTotalPriceFrom(List<Installment> installmentsPaid) {
+    if (installmentsPaid.isEmpty) return 0;
+    return installmentsPaid.map((i) => i.price).reduce((value, price) => value + price);
   }
 
   Row _paidSoFarTile(List<Installment> installmentsPaid, Bill currentBill, double paidSoFar) {
