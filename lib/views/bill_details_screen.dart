@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/components/bill_details/bill_detail_drop_down_menu.dart';
 import 'package:gastosrecorrentes/components/bill_details/bill_summary.dart';
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installments_animated_list.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
@@ -14,7 +15,19 @@ class BillDetailsScreen extends StatelessWidget {
     final Bill currentBill = billsViewModel.currentSelectedBill!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(currentBill.name), elevation: 0),
+      appBar: AppBar(
+        title: Text(currentBill.name),
+        elevation: 0,
+        actions: [
+          // IconButton(
+          //   onPressed: () => const BillDetailDropdownMenu(),
+          //   icon: const Icon(FontAwesomeIcons.ellipsisVertical),
+          //   padding: const EdgeInsets.all(2),
+          //   splashRadius: 20,
+          // )
+          BillDetailDropdownMenu(bill: currentBill),
+        ],
+      ),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: true,

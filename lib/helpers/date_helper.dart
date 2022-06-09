@@ -1,4 +1,4 @@
-import 'package:gastosrecorrentes/helpers/string_helpers.dart';
+import 'package:gastosrecorrentes/helpers/string_extensions.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:time_machine/time_machine.dart';
@@ -21,21 +21,21 @@ class DateHelper {
   static String formatMMMMYYYY(LocalDate? date) {
     if (date == null) return '-/-';
     initializeDateFormatting();
-    String formattedDate = StringHelper.capitalizeFirst(DateFormat.yMMMM('PT_BR').format(date.toDateTimeUnspecified()));
+    String formattedDate = DateFormat.yMMMM('PT_BR').format(date.toDateTimeUnspecified()).capitalizeFirst();
     return formattedDate;
   }
 
   static String formatDDMMYYYY(LocalDate? date) {
     if (date == null) return '-/-';
     initializeDateFormatting();
-    String formattedDate = StringHelper.capitalizeFirst(DateFormat.yMd('PT_BR').format(date.toDateTimeUnspecified()));
+    String formattedDate = DateFormat.yMd('PT_BR').format(date.toDateTimeUnspecified()).capitalizeFirst();
     return formattedDate;
   }
 
   static String formatMMYY(LocalDate? date) {
     if (date == null) return '-/-';
     initializeDateFormatting();
-    String formattedDate = StringHelper.capitalizeFirst(DateFormat.yM('PT_BR').format(date.toDateTimeUnspecified()));
+    String formattedDate = DateFormat.yM('PT_BR').format(date.toDateTimeUnspecified()).capitalizeFirst();
     return formattedDate.replaceAll("/20", "/");
   }
 }

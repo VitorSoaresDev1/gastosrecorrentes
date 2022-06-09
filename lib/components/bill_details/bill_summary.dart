@@ -72,25 +72,6 @@ class BillSummary extends StatelessWidget {
             )
           ],
         ),
-        // Row(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       MultiLanguage.translate("value") + ": ",
-        //       style: TextStyles.bodyText(light: true),
-        //     ),
-        //     const SizedBox(width: 2),
-        //     const Icon(
-        //       FontAwesomeIcons.brazilianRealSign,
-        //       size: 14,
-        //       color: Colors.white,
-        //     ),
-        //     Text(
-        //       " " + CurrencyHelper.formatDouble(currentBill.value),
-        //       style: TextStyles.bodyText(light: true),
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
@@ -101,6 +82,7 @@ class BillSummary extends StatelessWidget {
     double paidSoFar = extractTotalPriceFrom(installmentsPaid);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _paidSoFarTile(installmentsPaid, currentBill, paidSoFar),
         const SizedBox(height: 8),

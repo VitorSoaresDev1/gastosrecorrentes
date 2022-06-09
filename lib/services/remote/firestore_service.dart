@@ -46,6 +46,10 @@ class FireStoreService {
         .update(bill.copyWith(isActive: false).toMap());
   }
 
+  Future deleteBill(Bill bill) async {
+    await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).delete();
+  }
+
   Future<List<Bill>> getRegisteredBills({String? userId = ''}) async {
     try {
       QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance

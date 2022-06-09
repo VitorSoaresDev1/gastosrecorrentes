@@ -11,6 +11,7 @@ class AttachmentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool hasAttachment = false;
     return Padding(
       padding: const EdgeInsets.only(right: 20),
       child: Tooltip(
@@ -19,7 +20,65 @@ class AttachmentButton extends StatelessWidget {
           height: 40,
           width: 50,
           child: ElevatedButton(
-            onPressed: () => {},
+            onPressed: () => {
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                ),
+                builder: (context) {
+                  return SafeArea(
+                    bottom: true,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  "${MultiLanguage.translate("installment")}: ${installment!.index}",
+                                  style: TextStyles.titles2(),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text("Comprovante", style: TextStyles.titles2()),
+                            ),
+                            const Expanded(flex: 1, child: SizedBox()),
+                          ],
+                        ),
+                        ListTile(
+                          minLeadingWidth: 20,
+                          leading: Icon(FontAwesomeIcons.paperclip, size: 20, color: Colors.grey[900]),
+                          title: const Text("Anexar"),
+                        ),
+                        ListTile(
+                          minLeadingWidth: 20,
+                          leading: Icon(FontAwesomeIcons.fileLines,
+                              size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
+                          title: const Text("Visualizar"),
+                          enabled: hasAttachment,
+                        ),
+                        ListTile(
+                          minLeadingWidth: 20,
+                          leading: Icon(FontAwesomeIcons.ban,
+                              size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
+                          title: const Text("Remover"),
+                          enabled: hasAttachment,
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    ),
+                  );
+                },
+              )
+            },
             style: ElevatedButton.styleFrom(
               primary: Colors.white,
               elevation: 4,

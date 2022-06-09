@@ -1,3 +1,6 @@
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/remote/api_response.dart';
@@ -88,6 +91,7 @@ class BillsViewModel extends ChangeNotifier {
         bool isLate = currentMonthInstallment.compareTo(DateTime.now()) < 0;
         bill.installments!.add(
           Installment(
+            id: const Uuid().v1(),
             index: bill.installments!.length,
             dueDate: currentMonthInstallment,
             price: bill.value!,
@@ -154,6 +158,40 @@ class BillsViewModel extends ChangeNotifier {
     }
   }
 
+  Future deleteBill(Bill bill, String userId, BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          context.watch<BillsViewModel>();
+          return AlertDialog(
+            content: Text(MultiLanguage.translate('confirmToDeleteBill')),
+            actions: [
+              TextButton(
+                child: Text(MultiLanguage.translate('cancel')),
+                onPressed: () => Navigator.pop(context),
+              ),
+              TextButton(
+                child: Text(MultiLanguage.translate('confirm')),
+                onPressed: !loading
+                    ? () async {
+                        try {
+                          setLoading(true);
+                          await fireStoreService.deleteBill(bill);
+                          await getRegisteredBills(userId);
+                          setLoading(false);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } catch (e) {
+                          showSnackBar(context, e.toString());
+                        }
+                      }
+                    : null,
+              ),
+            ],
+          );
+        });
+  }
+
   List<Installment> generateBillInstallments(Bill bill) {
     DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(bill.startDate!);
     LocalDate start = LocalDate(dateAux.year, dateAux.month, bill.monthlydueDay!);
@@ -167,6 +205,7 @@ class BillsViewModel extends ChangeNotifier {
       bool isLate = dueDate.compareTo(LocalDate.today()) < 0;
       installments.add(
         Installment(
+          id: const Uuid().v1(),
           index: x + 1,
           dueDate: dueDate.toDateTimeUnspecified(),
           price: bill.value!,

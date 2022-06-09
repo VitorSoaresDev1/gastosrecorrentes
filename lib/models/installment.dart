@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class Installment {
+  String id;
   int index;
   DateTime dueDate;
   double price;
   bool isLate;
   bool isPaid;
   Installment({
+    required this.id,
     required this.index,
     required this.dueDate,
     required this.price,
@@ -17,6 +19,7 @@ class Installment {
   });
 
   Installment copyWith({
+    String? id,
     int? index,
     DateTime? dueDate,
     double? price,
@@ -24,6 +27,7 @@ class Installment {
     bool? isPaid,
   }) {
     return Installment(
+      id: id ?? this.id,
       index: index ?? this.index,
       dueDate: dueDate ?? this.dueDate,
       price: price ?? this.price,
@@ -34,6 +38,7 @@ class Installment {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'index': index,
       'dueDate': dueDate.millisecondsSinceEpoch,
       'price': price,
@@ -44,6 +49,7 @@ class Installment {
 
   factory Installment.fromMap(Map<String, dynamic> map) {
     return Installment(
+      id: map['id'] ?? '',
       index: map['index']?.toInt() ?? 0,
       dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
       price: map['price']?.toDouble() ?? 0.0,
@@ -58,7 +64,7 @@ class Installment {
 
   @override
   String toString() {
-    return 'Installment(index: $index, dueDate: $dueDate, price: $price, isLate: $isLate, isPaid: $isPaid)';
+    return 'Installment(id: $id, index: $index, dueDate: $dueDate, price: $price, isLate: $isLate, isPaid: $isPaid)';
   }
 
   @override
@@ -66,6 +72,7 @@ class Installment {
     if (identical(this, other)) return true;
 
     return other is Installment &&
+        other.id == id &&
         other.index == index &&
         other.dueDate == dueDate &&
         other.price == price &&
@@ -75,7 +82,7 @@ class Installment {
 
   @override
   int get hashCode {
-    return index.hashCode ^ dueDate.hashCode ^ price.hashCode ^ isLate.hashCode ^ isPaid.hashCode;
+    return id.hashCode ^ index.hashCode ^ dueDate.hashCode ^ price.hashCode ^ isLate.hashCode ^ isPaid.hashCode;
   }
 
   static Color getInstallmentColor(BuildContext context, Installment installment) {

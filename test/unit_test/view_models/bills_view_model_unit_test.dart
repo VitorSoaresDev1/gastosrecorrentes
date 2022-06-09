@@ -157,6 +157,7 @@ void main() {
 Installment createMockInstallment() {
   DateTime now = DateTime.now();
   return Installment(
+    id: '1',
     dueDate: DateTime(now.year, now.month, now.day),
     index: 1,
     isLate: false,

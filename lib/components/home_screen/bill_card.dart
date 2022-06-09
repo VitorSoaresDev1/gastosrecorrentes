@@ -95,7 +95,7 @@ class BillCard extends StatelessWidget {
               ),
               Container(
                 color: Colors.transparent,
-                width: 3,
+                width: 4,
               ),
             ],
           ),

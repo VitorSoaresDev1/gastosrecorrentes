@@ -53,7 +53,6 @@ class _ChangeValueButtonState extends State<ChangeValueButton> {
                         context: context,
                         builder: (context) {
                           final billsViewModel = context.watch<BillsViewModel>();
-
                           return AlertDialog(
                             insetPadding: EdgeInsets.zero,
                             contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -98,7 +97,7 @@ class _ChangeValueButtonState extends State<ChangeValueButton> {
                                         try {
                                           await billsViewModel.updateInstallmentPrice(
                                               widget.installment, valueController.text);
-                                          Navigator.pop(context);
+                                          if (mounted) Navigator.pop(context);
                                         } catch (e) {
                                           showSnackBar(context, e.toString());
                                         }
