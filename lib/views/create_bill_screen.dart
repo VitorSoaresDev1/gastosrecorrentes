@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/bill_details/create_bill/create_bill_form.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
-import 'package:gastosrecorrentes/helpers/functions_helper.dart';
+import 'package:gastosrecorrentes/models/create_bill_data.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
@@ -62,21 +62,15 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
               title: MultiLanguage.translate("createBill"),
               onPressed: !billsViewModel.loading
                   ? () async {
-                      try {
-                        if (createBillFormKey.currentState!.validate()) {
-                          await billsViewModel.addNewBill(
-                            userId: usersViewModel.user!.id!,
-                            name: _nameController.text,
-                            value: _valueController.text,
-                            dueDay: _dueDayController.text,
-                            amountMonths: _amountMonthsController.text,
-                          );
-                          await billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
-                          showSnackBar(context, MultiLanguage.translate("createdBillSuccessfully"));
-                          Navigator.pop(context);
-                        }
-                      } catch (e) {
-                        showSnackBar(context, e.toString());
+                      if (createBillFormKey.currentState!.validate()) {
+                        CreateBillData data = CreateBillData(
+                          userId: usersViewModel.user!.id!,
+                          name: _nameController.text,
+                          value: _valueController.text,
+                          dueDay: _dueDayController.text,
+                          amountMonths: _amountMonthsController.text,
+                        );
+                        await billsViewModel.addNewBill(context: context, data: data);
                       }
                     }
                   : null,

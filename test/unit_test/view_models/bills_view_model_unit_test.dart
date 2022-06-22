@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
+import 'package:gastosrecorrentes/models/create_bill_data.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/remote/api_response.dart';
+import 'package:gastosrecorrentes/services/local/locator.dart';
+import 'package:gastosrecorrentes/services/remote/api_request.dart';
 import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:mockito/mockito.dart';
@@ -14,6 +16,7 @@ import 'bills_view_model_unit_test.mocks.dart';
 @GenerateMocks([FireStoreService])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUpLocators();
 
   group('Test setters Methods:', () {
     test('Should apply new value to currentSelectedBill', () async {
@@ -27,7 +30,7 @@ void main() {
     test('Should apply new value to listBills', () async {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
       Bill billToTest = createMockBill();
-      viewModel.setListBills(ApiResponse.completed([billToTest]));
+      viewModel.setListBills(ApiRequest.completed([billToTest]));
 
       expect(viewModel.listBills.data!.length == 1, true);
       expect(viewModel.listBills.data![0] == billToTest, true);
@@ -94,6 +97,7 @@ void main() {
   group('Test addNewBill Method:', () {
     test('Should update listBills with new bill', () async {
       MockFireStoreService fakeFireStore = MockFireStoreService();
+      BuildContext context = MockBuildContext();
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
       Bill billToTest = createMockBill();
 
@@ -103,14 +107,14 @@ void main() {
           .thenAnswer((_) async => [createMockBill(), createMockBill().copyWith(ammountMonths: 1)]);
 
       when(fakeFireStore.setBilltoInactive(any)).thenAnswer((_) async => null);
-
-      await viewModel.addNewBill(
+      CreateBillData data = CreateBillData(
         name: billToTest.name,
         amountMonths: billToTest.ammountMonths!.toString(),
         dueDay: billToTest.monthlydueDay!.toString(),
         userId: billToTest.userId!,
         value: billToTest.value.toString(),
       );
+      await viewModel.addNewBill(context: context, data: data);
 
       expect(viewModel.listBills.data!.contains(billToTest), true);
       expect(viewModel.listBills.data!.length == 1, true);
@@ -149,7 +153,7 @@ void main() {
       );
 
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
-      verify(fakeFireStore.updateBill(any)).called(1);
+      verify(fakeFireStore.updateBill(any)).called(2);
     });
   });
 }

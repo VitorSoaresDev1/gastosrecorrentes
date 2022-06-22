@@ -1,13 +1,31 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
+import 'package:gastosrecorrentes/services/local/image_picker_handler.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 
-class AttachmentButton extends StatelessWidget {
+class AttachmentButton extends StatefulWidget {
   final Installment? installment;
 
   const AttachmentButton({Key? key, required this.installment}) : super(key: key);
+
+  @override
+  State<AttachmentButton> createState() => _AttachmentButtonState();
+}
+
+class _AttachmentButtonState extends State<AttachmentButton> with TickerProviderStateMixin, ImagePickerListener {
+  late AnimationController _controller;
+  late ImagePickerHandler imagePicker;
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker.init();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +59,7 @@ class AttachmentButton extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Text(
-                                  "${MultiLanguage.translate("installment")}: ${installment!.index}",
+                                  "${MultiLanguage.translate("installment")}: ${widget.installment!.index}",
                                   style: TextStyles.titles2(),
                                 ),
                               ),
@@ -57,6 +75,7 @@ class AttachmentButton extends StatelessWidget {
                           minLeadingWidth: 20,
                           leading: Icon(FontAwesomeIcons.paperclip, size: 20, color: Colors.grey[900]),
                           title: const Text("Anexar"),
+                          onTap: () => imagePicker.showDialog(context),
                         ),
                         ListTile(
                           minLeadingWidth: 20,
@@ -96,5 +115,11 @@ class AttachmentButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  userImage(File _image) {
+    // TODO: implement userImage
+    throw UnimplementedError();
   }
 }

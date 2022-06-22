@@ -99,7 +99,7 @@ class _ChangeValueButtonState extends State<ChangeValueButton> {
                                               widget.installment, valueController.text);
                                           if (mounted) Navigator.pop(context);
                                         } catch (e) {
-                                          showSnackBar(context, e.toString());
+                                          showSnackBar(e.toString());
                                         }
                                       }
                                     },

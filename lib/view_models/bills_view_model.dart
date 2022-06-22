@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gastosrecorrentes/models/create_bill_data.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/shared/globals.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
-import 'package:gastosrecorrentes/services/remote/api_response.dart';
+import 'package:gastosrecorrentes/services/remote/api_request.dart';
 import 'package:time_machine/time_machine.dart';
 
 import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
@@ -17,14 +20,14 @@ class BillsViewModel extends ChangeNotifier {
   FireStoreService fireStoreService;
   bool _loading = false;
   Bill? currentSelectedBill;
-  ApiResponse<List<Bill>> _listBills = ApiResponse.loading();
+  ApiRequest<List<Bill>> _listBills = ApiRequest.loading();
 
   BillsViewModel({required this.fireStoreService}) {
     fireStoreService = fireStoreService;
   }
 
   bool get loading => _loading;
-  ApiResponse<List<Bill>> get listBills => _listBills;
+  ApiRequest<List<Bill>> get listBills => _listBills;
 
   void setLoading(bool loading) {
     _loading = loading;
@@ -33,7 +36,7 @@ class BillsViewModel extends ChangeNotifier {
 
   set setCurrentSelectedBill(Bill bill) => currentSelectedBill = bill;
 
-  void setListBills(ApiResponse<List<Bill>> response) => _listBills = response;
+  void setListBills(ApiRequest<List<Bill>> response) => _listBills = response;
 
   Future getRegisteredBills(String userId) async {
     try {
@@ -47,9 +50,11 @@ class BillsViewModel extends ChangeNotifier {
 
       _sortBills(bills);
 
-      setListBills(ApiResponse.completed(bills));
+      setListBills(ApiRequest.completed(bills));
+    } on FirebaseException catch (e) {
+      setListBills(ApiRequest.error(e.code.toString()));
     } catch (e) {
-      setListBills(ApiResponse.error(e.toString()));
+      setListBills(ApiRequest.error(e.toString()));
     } finally {
       setLoading(false);
     }
@@ -61,12 +66,12 @@ class BillsViewModel extends ChangeNotifier {
       for (Installment installment in bill.installments!) {
         if (installment.dueDate.compareTo(DateTime.now()) < 0 && !installment.isLate) {
           installment.isLate = true;
-          await fireStoreService.updateBill(bill);
           updated = true;
         }
       }
+      if (updated) await fireStoreService.updateBill(bill);
+      updated = false;
     }
-    if (updated) await getRegisteredBills(userId);
   }
 
   void _removeInactiveBills(List<Bill> bills) {
@@ -123,25 +128,19 @@ class BillsViewModel extends ChangeNotifier {
     });
   }
 
-  Future addNewBill({
-    required String name,
-    required String value,
-    required String dueDay,
-    required String amountMonths,
-    required String userId,
-  }) async {
+  Future addNewBill({required BuildContext context, required CreateBillData data}) async {
     try {
       setLoading(true);
       DateTime now = DateTime.now();
       DateTime startDate = DateTime(now.year, now.month, 1).subtract(const Duration(days: 120));
-      double parsedValue = double.tryParse(value.replaceAll(",", ".")) ?? 0;
+      double parsedValue = double.tryParse(data.value.replaceAll(",", ".")) ?? 0;
 
       Bill billToAdd = Bill(
-        name: name.capitalizeFirst(),
-        userId: userId,
+        name: data.name.capitalizeFirst(),
+        userId: data.userId,
         value: parsedValue,
-        monthlydueDay: int.tryParse(dueDay) ?? 0,
-        ammountMonths: int.tryParse(amountMonths),
+        monthlydueDay: int.tryParse(data.dueDay) ?? 0,
+        ammountMonths: int.tryParse(data.amountMonths),
         startDate: startDate.millisecondsSinceEpoch,
         installments: [],
         isActive: true,
@@ -150,9 +149,13 @@ class BillsViewModel extends ChangeNotifier {
       billToAdd.installments = generateBillInstallments(billToAdd);
 
       await fireStoreService.addBill(billToAdd);
-      await getRegisteredBills(userId);
+      await getRegisteredBills(data.userId);
+      showSnackBar(MultiLanguage.translate("createdBillSuccessfully"));
+      Navigator.pop(context);
+    } on FirebaseException catch (e) {
+      showSnackBar(translateErrors(e.code));
     } catch (e) {
-      rethrow;
+      showSnackBar(translateErrors(e.toString()));
     } finally {
       setLoading(false);
     }
@@ -182,7 +185,7 @@ class BillsViewModel extends ChangeNotifier {
                           Navigator.pop(context);
                           Navigator.pop(context);
                         } catch (e) {
-                          showSnackBar(context, e.toString());
+                          showSnackBar(e.toString());
                         }
                       }
                     : null,
@@ -257,7 +260,7 @@ class BillsViewModel extends ChangeNotifier {
       int index = bill.installments!.indexOf(installmentCard.installment);
       bill.installments![index].isPaid = false;
       bill.installments!.sort((a, b) => paidsLastThenByDate(a, b));
-      showSnackBar(context, e.toString());
+      showSnackBar(e.toString());
     } finally {
       await getRegisteredBills(userId);
       setLoading(false);

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
+import 'package:gastosrecorrentes/components/shared/error_view_widget.dart';
 import 'package:gastosrecorrentes/components/shared/loading_widget.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/services/local/navigation_service.dart';
-import 'package:gastosrecorrentes/services/remote/status.dart';
+import 'package:gastosrecorrentes/services/remote/api_request_status.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
@@ -33,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("activeBills"))),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => openCreateBillScreen(context),
+        onPressed: () => NavigationService.openCreateBillScreen(context),
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
@@ -42,11 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Builder(
             builder: ((context) {
               switch (billsViewModel.listBills.status) {
-                case Status.loading:
+                case ApiRequestStatus.loading:
                   return const LoadingWidget();
-                case Status.error:
-                  return Container();
-                case Status.completed:
+                case ApiRequestStatus.error:
+                  String errorText = translateErrors(billsViewModel.listBills.message);
+                  return ErrorViewWidget(errorText: errorText);
+                case ApiRequestStatus.completed:
                   return ListView.separated(
                     itemCount: billsViewModel.listBills.data!.length,
                     separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
@@ -54,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       bill: billsViewModel.listBills.data![index],
                       onTap: () {
                         billsViewModel.setCurrentSelectedBill = billsViewModel.listBills.data![index];
-                        openBillDetailsScreen(context);
+                        NavigationService.openBillDetailsScreen(context);
                       },
                     ),
                   );

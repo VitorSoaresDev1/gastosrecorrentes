@@ -87,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
                     const Text(" | "),
                     GestureDetector(
-                      onTap: () => openCreateUserScreen(context),
+                      onTap: () => NavigationService.openCreateUserScreen(context),
                       child: Text(MultiLanguage.translate("createUser"), style: TextStyles.links()),
                     ),
                   ],
@@ -96,8 +96,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 ButtonWithLoading(
                   isLoading: usersViewModel.loading,
                   title: MultiLanguage.translate("logIn"),
-                  onPressed: () async =>
-                      await usersViewModel.signIn(context, e: _emailController.text, p: _passwordController.text),
+                  onPressed: () async => await usersViewModel.signIn(
+                    context,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  ),
                 ),
               ],
             ),

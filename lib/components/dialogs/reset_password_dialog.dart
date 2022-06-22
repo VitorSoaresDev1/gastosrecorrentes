@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/services/remote/firebase_auth_service.dart';
 
 class ResetPasswordDialog extends StatefulWidget {
-  const ResetPasswordDialog({Key? key}) : super(key: key);
+  final FirebaseAuthService firebaseAuthService;
+  const ResetPasswordDialog({Key? key, required this.firebaseAuthService}) : super(key: key);
 
   @override
   _ResetPasswordDialogState createState() => _ResetPasswordDialogState();
@@ -56,15 +58,15 @@ class _ResetPasswordDialogState extends State<ResetPasswordDialog> {
           onPressed: () async {
             if (_resetPasswordFormKey.currentState!.validate()) {
               try {
-                await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text);
-                showSnackBar(context, MultiLanguage.translate("resetPasswordEmailSent"));
+                await widget.firebaseAuthService.resetPassword(email: _emailController.text);
+                showSnackBar(MultiLanguage.translate("resetPasswordEmailSent"));
                 Navigator.pop(context);
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  showSnackBar(context, MultiLanguage.translate("USER_NOT_FOUND"));
+                  showSnackBar(MultiLanguage.translate("USER_NOT_FOUND"));
                 }
               } catch (e) {
-                showSnackBar(context, e.toString());
+                showSnackBar(e.toString());
               }
             }
           },

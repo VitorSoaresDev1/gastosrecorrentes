@@ -49,5 +49,7 @@
     "EMAIL_ALREADY_IN_USE": "O E-mail escolhido já está em uso",
     "USER_NOT_FOUND": "Usuário não encontrado",
     "CREDENTIALS_NOT_FOUND": "E-mail e ou senha fornecidos estão incorretos",
-    "INVALID_DAY_OF_MONTH": "Insira um dia do mês válido"
+    "INVALID_DAY_OF_MONTH": "Insira um dia do mês válido",
+    "permission-denied": "Sem permissão necessária",
+    "unkown_error": "Erro desconhecido"
 }

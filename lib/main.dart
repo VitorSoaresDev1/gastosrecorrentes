@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/services/remote/firebase_auth_service.dart';
 import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 import 'package:gastosrecorrentes/services/local/navigation_service.dart';
 import 'package:gastosrecorrentes/services/local/shared_preferences.dart';
+import 'package:gastosrecorrentes/shared/globals.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
@@ -29,17 +31,18 @@ class _MyAppState extends State<MyApp> {
       key: key,
       providers: [
         ChangeNotifierProvider(create: (_) => BillsViewModel(fireStoreService: FireStoreService())),
-        ChangeNotifierProvider(create: (_) => InitAppViewModel()),
-        ChangeNotifierProvider(create: (_) => UsersViewModel()),
+        ChangeNotifierProvider(create: (_) => InitAppViewModel(firebaseAuthService: FirebaseAuthService())),
+        ChangeNotifierProvider(create: (_) => UsersViewModel(firebaseAuthService: FirebaseAuthService())),
         Provider(create: (_) => SharedPreferencesService()),
       ],
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: MaterialApp(
+          scaffoldMessengerKey: snackbarKey,
           debugShowCheckedModeBanner: false,
           title: 'Gastos Recorrentes',
           theme: _setThemeData,
-          routes: availableRoutes,
+          routes: NavigationService.availableRoutes,
         ),
       ),
     );

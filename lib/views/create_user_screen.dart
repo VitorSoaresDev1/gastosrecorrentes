@@ -59,9 +59,9 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                     title: MultiLanguage.translate("createUser"),
                     onPressed: () async => await usersViewModel.createUser(
                       context,
-                      e: _emailController.text,
-                      p: _passwordController.text,
-                      n: _nameController.text,
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
                     ),
                   ),
                 ],

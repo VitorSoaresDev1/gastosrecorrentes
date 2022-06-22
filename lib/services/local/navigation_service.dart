@@ -10,36 +10,37 @@ import 'package:gastosrecorrentes/views/init_app.dart';
 import 'package:gastosrecorrentes/views/sign_in.dart';
 import 'package:provider/provider.dart';
 
-Map<String, Widget Function(BuildContext)> availableRoutes = {
-  '/': (context) => const InitApp(),
-  '/signIn': (context) => const SignInScreen(),
-  '/homeScreen': (context) => const HomeScreen(),
-  '/createUser': (context) => const CreateUserScreen(),
-  '/createBill': (context) => const CreateBillScreen(),
-  '/billDetails': (context) => const BillDetailsScreen(),
-};
+class NavigationService {
+  static Map<String, Widget Function(BuildContext)> availableRoutes = {
+    '/': (context) => const InitApp(),
+    '/signIn': (context) => const SignInScreen(),
+    '/homeScreen': (context) => const HomeScreen(),
+    '/createUser': (context) => const CreateUserScreen(),
+    '/createBill': (context) => const CreateBillScreen(),
+    '/billDetails': (context) => const BillDetailsScreen(),
+  };
 
-void replaceToSignInScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/signIn');
+  static void replaceToSignInScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/signIn');
 
-void replaceToHomeScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/homeScreen');
+  static void replaceToHomeScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/homeScreen');
 
-void openCreateUserScreen(BuildContext context) => Navigator.pushNamed(context, '/createUser');
+  static void openCreateUserScreen(BuildContext context) => Navigator.pushNamed(context, '/createUser');
 
-void openCreateBillScreen(BuildContext context) => Navigator.pushNamed(context, '/createBill');
+  static void openCreateBillScreen(BuildContext context) => Navigator.pushNamed(context, '/createBill');
 
-void openBillDetailsScreen(BuildContext context) => Navigator.pushNamed(context, '/billDetails');
+  static void openBillDetailsScreen(BuildContext context) => Navigator.pushNamed(context, '/billDetails');
 
-void navigateToInitialScreen(BuildContext context) {
-  final usersViewModel = context.watch<UsersViewModel>();
-  User? firebaseUser = FirebaseAuth.instance.currentUser;
-  if (firebaseUser == null) {
-    scheduleCall(() {
-      replaceToSignInScreen(context);
-    });
-  } else {
-    scheduleCall(() async {
-      await usersViewModel.loadUserProfile(email: firebaseUser.email);
-      replaceToHomeScreen(context);
-    });
+  static void navigateToInitialScreen(BuildContext context, User? firebaseUser) {
+    final usersViewModel = context.watch<UsersViewModel>();
+    if (firebaseUser == null) {
+      scheduleCall(() {
+        replaceToSignInScreen(context);
+      });
+    } else {
+      scheduleCall(() async {
+        await usersViewModel.loadUserProfile(email: firebaseUser.email);
+        replaceToHomeScreen(context);
+      });
+    }
   }
 }
