@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gastosrecorrentes/components/bill_details/installment_card.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 
 class InstallmentsAnimatedList extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gastosrecorrentes/services/navigation_service.dart';
-import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:gastosrecorrentes/services/local/navigation_service.dart';
+import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 
 class InitApp extends StatelessWidget {
   const InitApp({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class InitApp extends StatelessWidget {
     if (initAppViewModel.loading) {
       initAppViewModel.loadAppInitialConfigs(context);
     } else {
-      navigateToInitialScreen(context);
+      NavigationService.navigateToInitialScreen(context, initAppViewModel.firebaseAuthService.currentUser());
     }
     return Scaffold(body: Container());
   }

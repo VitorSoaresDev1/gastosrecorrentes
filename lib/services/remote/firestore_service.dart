@@ -6,9 +6,7 @@ import 'package:gastosrecorrentes/shared/firestore_constants.dart';
 class FireStoreService {
   static Future addUser({String name = '', String email = ''}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection(FireStoreConstants.usersCollection)
-          .add({"name": name, "email": email});
+      await FirebaseFirestore.instance.collection(FireStoreConstants.usersCollection).add({"name": name, "email": email});
     } catch (e) {
       rethrow;
     }
@@ -16,10 +14,7 @@ class FireStoreService {
 
   static Future<AppUser> getUser({String email = ''}) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection(FireStoreConstants.usersCollection)
-          .where('email', isEqualTo: email.toLowerCase())
-          .get();
+      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection(FireStoreConstants.usersCollection).where('email', isEqualTo: email.toLowerCase()).get();
       AppUser user = AppUser.fromMap(snapshot.docs[0].data());
       user.id = snapshot.docs[0].id;
       return user;
@@ -36,23 +31,19 @@ class FireStoreService {
     }
   }
 
-  Future updateBill(Bill bill) async =>
-      FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).update(bill.toMap());
+  Future updateBill(Bill bill) async => FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).update(bill.toMap());
 
   Future setBilltoInactive(Bill bill) async {
-    FirebaseFirestore.instance
-        .collection(FireStoreConstants.billsCollection)
-        .doc(bill.id)
-        .update(bill.copyWith(isActive: false).toMap());
+    FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).update(bill.copyWith(isActive: false).toMap());
+  }
+
+  Future deleteBill(Bill bill) async {
+    await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).doc(bill.id).delete();
   }
 
   Future<List<Bill>> getRegisteredBills({String? userId = ''}) async {
     try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
-          .collection(FireStoreConstants.billsCollection)
-          .where('userId', isEqualTo: userId)
-          .where('isActive', isEqualTo: true)
-          .get();
+      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection(FireStoreConstants.billsCollection).where('userId', isEqualTo: userId).where('isActive', isEqualTo: true).get();
 
       List<Bill> bills = snapshot.docs.map((e) {
         Bill bill = Bill.fromMap(e.data());

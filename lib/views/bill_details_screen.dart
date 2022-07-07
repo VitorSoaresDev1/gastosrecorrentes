@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/components/bill_details/bill_detail_drop_down_menu.dart';
 import 'package:gastosrecorrentes/components/bill_details/bill_summary.dart';
-import 'package:gastosrecorrentes/components/bill_details/installments_animated_list.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installments_animated_list.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,14 @@ class BillDetailsScreen extends StatelessWidget {
     final Bill currentBill = billsViewModel.currentSelectedBill!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(currentBill.name), elevation: 0),
+      appBar: AppBar(
+        title: Text(currentBill.name),
+        elevation: 0,
+        actions: [
+          BillDetailDropdownMenu(bill: currentBill),
+        ],
+      ),
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: true,
         child: Stack(
@@ -35,11 +43,7 @@ class BillDetailsScreen extends StatelessWidget {
             ]),
             ListView(
               physics: const ClampingScrollPhysics(),
-              children: [
-                const BillSummary(),
-                const SizedBox(height: 8),
-                InstallmentsAnimatedList(billsViewModel: billsViewModel)
-              ],
+              children: [const BillSummary(), const SizedBox(height: 8), InstallmentsAnimatedList(billsViewModel: billsViewModel)],
             ),
           ],
         ),

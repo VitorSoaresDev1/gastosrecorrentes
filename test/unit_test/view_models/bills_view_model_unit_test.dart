@@ -1,7 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gastosrecorrentes/components/bill_details/installment_components/installment_card.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
+import 'package:gastosrecorrentes/models/create_bill_data.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/firestore_service.dart';
+import 'package:gastosrecorrentes/services/local/locator.dart';
+import 'package:gastosrecorrentes/services/remote/api_request.dart';
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:time_machine/time_machine.dart';
@@ -11,6 +16,7 @@ import 'bills_view_model_unit_test.mocks.dart';
 @GenerateMocks([FireStoreService])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUpLocators();
 
   group('Test setters Methods:', () {
     test('Should apply new value to currentSelectedBill', () async {
@@ -24,10 +30,10 @@ void main() {
     test('Should apply new value to listBills', () async {
       BillsViewModel viewModel = BillsViewModel(fireStoreService: FireStoreService());
       Bill billToTest = createMockBill();
-      viewModel.setListBills([billToTest]);
+      viewModel.setListBills(ApiRequest.completed([billToTest]));
 
-      expect(viewModel.listBills.length == 1, true);
-      expect(viewModel.listBills[0] == billToTest, true);
+      expect(viewModel.listBills.data!.length == 1, true);
+      expect(viewModel.listBills.data![0] == billToTest, true);
     });
   });
 
@@ -69,8 +75,8 @@ void main() {
 
       await viewModel.getRegisteredBills('123');
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
     });
 
@@ -84,13 +90,14 @@ void main() {
 
       await viewModel.getRegisteredBills('123');
 
-      expect(viewModel.listBills.isEmpty, true);
+      expect(viewModel.listBills.data!.isEmpty, true);
       verifyNever(fakeFireStore.setBilltoInactive(any));
     });
   });
   group('Test addNewBill Method:', () {
     test('Should update listBills with new bill', () async {
       MockFireStoreService fakeFireStore = MockFireStoreService();
+      BuildContext context = MockBuildContext();
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
       Bill billToTest = createMockBill();
 
@@ -100,17 +107,17 @@ void main() {
           .thenAnswer((_) async => [createMockBill(), createMockBill().copyWith(ammountMonths: 1)]);
 
       when(fakeFireStore.setBilltoInactive(any)).thenAnswer((_) async => null);
-
-      await viewModel.addNewBill(
+      CreateBillData data = CreateBillData(
         name: billToTest.name,
         amountMonths: billToTest.ammountMonths!.toString(),
         dueDay: billToTest.monthlydueDay!.toString(),
         userId: billToTest.userId!,
         value: billToTest.value.toString(),
       );
+      await viewModel.addNewBill(context: context, data: data);
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
     });
   });
@@ -119,8 +126,11 @@ void main() {
     test('Should update exact installment to paid equals true', () async {
       MockFireStoreService fakeFireStore = MockFireStoreService();
       BillsViewModel viewModel = BillsViewModel(fireStoreService: fakeFireStore);
+      BuildContext context = MockBuildContext();
       Bill billToTest = createMockBill();
       Installment installment = createMockInstallment();
+      InstallmentCard installmentCard = InstallmentCard(animation: MockAnimation(), index: 1, installment: installment);
+
       billToTest.installments = [installment];
       viewModel.currentSelectedBill = billToTest;
 
@@ -131,17 +141,19 @@ void main() {
 
       when(fakeFireStore.updateBill(any)).thenAnswer((_) async => null);
 
-      await viewModel.payInstallment(installment, '123');
+      await viewModel.payInstallment(context, installmentCard, '123');
 
-      expect(viewModel.listBills.contains(billToTest), true);
-      expect(viewModel.listBills.length == 1, true);
+      expect(viewModel.listBills.data!.contains(billToTest), true);
+      expect(viewModel.listBills.data!.length == 1, true);
       expect(
-          viewModel.currentSelectedBill!.installments!
-              .where((element) => element.dueDate == installment.dueDate && element.isPaid)
-              .isNotEmpty,
-          true);
+        viewModel.currentSelectedBill!.installments!
+            .where((element) => element.dueDate == installment.dueDate && element.isPaid)
+            .isNotEmpty,
+        true,
+      );
+
       verify(fakeFireStore.setBilltoInactive(any)).called(1);
-      verify(fakeFireStore.updateBill(any)).called(1);
+      verify(fakeFireStore.updateBill(any)).called(2);
     });
   });
 }
@@ -149,6 +161,7 @@ void main() {
 Installment createMockInstallment() {
   DateTime now = DateTime.now();
   return Installment(
+    id: '1',
     dueDate: DateTime(now.year, now.month, now.day),
     index: 1,
     isLate: false,
@@ -171,3 +184,7 @@ Bill createMockBill() {
     installments: [],
   );
 }
+
+class MockBuildContext extends Mock implements BuildContext {}
+
+class MockAnimation extends Mock implements Animation<double> {}

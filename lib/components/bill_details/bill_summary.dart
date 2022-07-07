@@ -4,7 +4,7 @@ import 'package:gastosrecorrentes/helpers/currency_helper.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +34,6 @@ class BillSummary extends StatelessWidget {
     );
   }
 
-  double extractPaidSoFarInfo(List<Installment> installmentsPaid) {
-    if (installmentsPaid.isEmpty) return 0;
-    return installmentsPaid.map((i) => i.price).reduce((value, price) => value + price);
-  }
-
   Row _dateTile(Bill currentBill) {
     DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(currentBill.startDate!);
     LocalDate startDate = LocalDate(dateAux.year, dateAux.month, currentBill.monthlydueDay!);
@@ -47,12 +42,12 @@ class BillSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          MultiLanguage.translate("start") + ": " + DateHelper.formatDDMMYYYY(startDate),
+          MultiLanguage.translate("start") + ": " + DateHelper.formatMMYY(startDate),
           style: TextStyles.bodyText(light: true),
         ),
         if (currentBill.ammountMonths! > 0)
           Text(
-            MultiLanguage.translate("end") + ": " + DateHelper.formatDDMMYYYY(endDate),
+            MultiLanguage.translate("end") + ": " + DateHelper.formatMMYY(endDate),
             style: TextStyles.bodyText(light: true),
           ),
       ],
@@ -67,30 +62,14 @@ class BillSummary extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              MultiLanguage.translate("active") +
-                  ": " +
-                  MultiLanguage.translate(currentBill.isActive ?? false ? "yes" : "no"),
+              MultiLanguage.translate("active") + ": ",
               style: TextStyles.bodyText(light: true),
             ),
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              MultiLanguage.translate("value") + ": ",
-              style: TextStyles.bodyText(light: true),
-            ),
-            const SizedBox(width: 2),
-            const Icon(
-              FontAwesomeIcons.brazilianRealSign,
-              size: 14,
+            Icon(
+              (currentBill.isActive ?? false) ? FontAwesomeIcons.check : FontAwesomeIcons.xmark,
               color: Colors.white,
-            ),
-            Text(
-              " " + CurrencyHelper.formatDouble(currentBill.value),
-              style: TextStyles.bodyText(light: true),
-            ),
+              size: 16,
+            )
           ],
         ),
       ],
@@ -98,17 +77,23 @@ class BillSummary extends StatelessWidget {
   }
 
   Widget _pricesTiles(Bill currentBill) {
-    double totalValue = (currentBill.value! * currentBill.ammountMonths!);
+    double totalValue = extractTotalPriceFrom(currentBill.installments!);
     List<Installment> installmentsPaid = currentBill.installments!.where((installment) => installment.isPaid).toList();
-    double paidSoFar = extractPaidSoFarInfo(installmentsPaid);
+    double paidSoFar = extractTotalPriceFrom(installmentsPaid);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         _paidSoFarTile(installmentsPaid, currentBill, paidSoFar),
         const SizedBox(height: 8),
         if (currentBill.ammountMonths! > 0) _totalAndRemainingTile(totalValue, installmentsPaid, paidSoFar),
       ],
     );
+  }
+
+  double extractTotalPriceFrom(List<Installment> installmentsPaid) {
+    if (installmentsPaid.isEmpty) return 0;
+    return installmentsPaid.map((i) => i.price).reduce((value, price) => value + price);
   }
 
   Row _paidSoFarTile(List<Installment> installmentsPaid, Bill currentBill, double paidSoFar) {
@@ -120,17 +105,20 @@ class BillSummary extends StatelessWidget {
               ": ${installmentsPaid.length} / ${currentBill.installments!.length}",
           style: TextStyles.bodyText(light: true),
         ),
-        if (installmentsPaid.isNotEmpty)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
-              Text(
-                " " + CurrencyHelper.formatDouble(paidSoFar),
-                style: TextStyles.bodyText(light: true),
-              ),
-            ],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              MultiLanguage.translate("paid") + ": ",
+              style: TextStyles.bodyText(light: true),
+            ),
+            const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
+            Text(
+              " " + CurrencyHelper.formatDouble(paidSoFar),
+              style: TextStyles.bodyText(light: true),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -142,16 +130,10 @@ class BillSummary extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              MultiLanguage.translate("total") + ": ",
-              style: TextStyles.bodyText(light: true),
-            ),
+            Text(MultiLanguage.translate("total") + ": ", style: TextStyles.bodyText(light: true)),
             const SizedBox(width: 2),
             const Icon(FontAwesomeIcons.brazilianRealSign, size: 14, color: Colors.white),
-            Text(
-              " ${CurrencyHelper.formatDouble(totalValue)}",
-              style: TextStyles.bodyText(light: true),
-            ),
+            Text(" ${CurrencyHelper.formatDouble(totalValue)}", style: TextStyles.bodyText(light: true)),
           ],
         ),
         if (installmentsPaid.isNotEmpty)

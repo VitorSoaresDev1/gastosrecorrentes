@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? type;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final bool autoFocus;
 
   const CustomTextField({
     Key? key,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.controller,
     required this.title,
     this.inputFormatters,
+    this.autoFocus = false,
   }) : super(key: key);
 
   @override
@@ -27,13 +29,14 @@ class CustomTextField extends StatelessWidget {
         title,
         Flexible(
           child: TextFormField(
+            autofocus: autoFocus,
             controller: controller,
             textInputAction: action,
             keyboardType: type,
             inputFormatters: inputFormatters,
             textAlignVertical: TextAlignVertical.center,
             decoration: const InputDecoration(
-              contentPadding: EdgeInsets.only(left: 4, bottom: 2),
+              contentPadding: EdgeInsets.only(left: 4, bottom: 4),
             ),
             validator: validator,
           ),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:gastosrecorrentes/components/bill_details/create_bill/create_bill_form.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
-import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
-import 'package:gastosrecorrentes/helpers/functions_helper.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
+import 'package:gastosrecorrentes/models/create_bill_data.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
@@ -63,127 +62,18 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
               title: MultiLanguage.translate("createBill"),
               onPressed: !billsViewModel.loading
                   ? () async {
-                      try {
-                        if (createBillFormKey.currentState!.validate()) {
-                          await billsViewModel.addNewBill(
-                            userId: usersViewModel.user!.id!,
-                            name: _nameController.text,
-                            value: _valueController.text,
-                            dueDay: _dueDayController.text,
-                            amountMonths: _amountMonthsController.text,
-                          );
-                          await billsViewModel.getRegisteredBills(usersViewModel.user!.id!);
-                          showSnackBar(context, MultiLanguage.translate("createdBillSuccessfully"));
-                          Navigator.pop(context);
-                        }
-                      } catch (e) {
-                        showSnackBar(context, e.toString());
+                      if (createBillFormKey.currentState!.validate()) {
+                        CreateBillData data = CreateBillData(
+                          userId: usersViewModel.user!.id!,
+                          name: _nameController.text,
+                          value: _valueController.text,
+                          dueDay: _dueDayController.text,
+                          amountMonths: _amountMonthsController.text,
+                        );
+                        await billsViewModel.addNewBill(context: context, data: data);
                       }
                     }
                   : null,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CreateBillForm extends StatelessWidget {
-  final TextEditingController nameController;
-  final TextEditingController valueController;
-  final TextEditingController dueDayController;
-  final TextEditingController amountMonthsController;
-  final GlobalKey<FormState> createBillFormKey;
-
-  const CreateBillForm({
-    Key? key,
-    required this.nameController,
-    required this.valueController,
-    required this.dueDayController,
-    required this.amountMonthsController,
-    required this.createBillFormKey,
-  }) : super(key: key);
-
-  final double? defaultFieldsVerticalPadding = 8;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * .8),
-      child: Form(
-        key: createBillFormKey,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            CustomTextField(
-              controller: nameController,
-              title: Text(MultiLanguage.translate("name") + ": "),
-              action: TextInputAction.next,
-              type: TextInputType.name,
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return MultiLanguage.translate("ENTER_VALID_NAME");
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: defaultFieldsVerticalPadding),
-            CustomTextField(
-              controller: valueController,
-              title: Text(MultiLanguage.translate("value") + ": "),
-              action: TextInputAction.next,
-              type: const TextInputType.numberWithOptions(signed: true, decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\,?\d{0,2}'))],
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return MultiLanguage.translate("CANT_BE_EMPTY");
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: defaultFieldsVerticalPadding),
-            CustomTextField(
-              controller: dueDayController,
-              title: Text(MultiLanguage.translate("dueDay") + ": "),
-              action: TextInputAction.next,
-              type: const TextInputType.numberWithOptions(signed: true, decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d{0,2}'))],
-              validator: (val) {
-                int value = int.tryParse(val!) ?? 0;
-                if (val.isEmpty) {
-                  return MultiLanguage.translate("CANT_BE_EMPTY");
-                }
-                if (value < 1 || value > 31) {
-                  return MultiLanguage.translate("INVALID_DAY_OF_MONTH");
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: defaultFieldsVerticalPadding),
-            CustomTextField(
-              controller: amountMonthsController,
-              title: Row(
-                children: [
-                  Tooltip(
-                      message: MultiLanguage.translate("numberOfInstallmentsExplainText"),
-                      margin: const EdgeInsets.all(8),
-                      padding: const EdgeInsets.all(8),
-                      child: const Icon(Icons.help_outline, size: 16, color: Colors.blue)),
-                  const SizedBox(width: 2),
-                  Text(MultiLanguage.translate("numberOfInstallments")),
-                  const Text(": "),
-                ],
-              ),
-              action: TextInputAction.done,
-              type: const TextInputType.numberWithOptions(signed: true, decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d{0,4}'))],
-              validator: (val) {
-                if (val!.isEmpty) {
-                  return MultiLanguage.translate("CANT_BE_EMPTY");
-                }
-                return null;
-              },
             ),
           ],
         ),

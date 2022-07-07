@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/dialogs/reset_password_dialog.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/models/user.dart';
-import 'package:gastosrecorrentes/services/firestore_service.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
-import 'package:gastosrecorrentes/services/navigation_service.dart';
+import 'package:gastosrecorrentes/services/remote/firebase_auth_service.dart';
+import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/navigation_service.dart';
 
 class UsersViewModel extends ChangeNotifier {
   AppUser? user;
   bool _isLoading = false;
   String? emailController = '';
   String? passwordController = '';
+  FirebaseAuthService firebaseAuthService;
+
+  UsersViewModel({required this.firebaseAuthService}) {
+    firebaseAuthService = firebaseAuthService;
+  }
 
   final GlobalKey<FormState> _createUserFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUserInFormKey = GlobalKey<FormState>();
@@ -25,39 +31,41 @@ class UsersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  createUser(context, {String? e, String? p, String? n}) async {
+  createUser(context, {required String email, required String password, required String name}) async {
     if (_createUserFormKey.currentState!.validate()) {
       setLoading(true);
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: e!, password: p!);
-        await FireStoreService.addUser(name: n!, email: e);
-        showSnackBar(context, MultiLanguage.translate("userCreatedSuccessfully"));
+        await firebaseAuthService.createUser(email: email, password: password);
+        await FireStoreService.addUser(name: name, email: email);
+        showSnackBar(MultiLanguage.translate("userCreatedSuccessfully"));
         Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'email-already-in-use') {
-          showSnackBar(context, MultiLanguage.translate("EMAIL_ALREADY_IN_USE"));
+          showSnackBar(MultiLanguage.translate("EMAIL_ALREADY_IN_USE"));
         }
       } catch (e) {
-        showSnackBar(context, e.toString());
+        showSnackBar(e.toString());
       } finally {
         setLoading(false);
       }
     }
   }
 
-  Future signIn(context, {String? e, String? p}) async {
+  Future signIn(context, {required String email, required String password}) async {
     if (_signUserInFormKey.currentState!.validate()) {
       setLoading(true);
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: e!, password: p!);
-        await loadUserProfile(email: e);
-        replaceToHomeScreen(context);
+        await firebaseAuthService.signIn(email: email, password: password);
+        await loadUserProfile(email: email);
+        NavigationService.replaceToHomeScreen(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-          showSnackBar(context, MultiLanguage.translate("CREDENTIALS_NOT_FOUND"));
+          showSnackBar(translateErrors("CREDENTIALS_NOT_FOUND"));
+        } else if (e.code == 'network-request-failed') {
+          showSnackBar(translateErrors("no_network_connection"));
         }
       } catch (e) {
-        showSnackBar(context, e.toString());
+        showSnackBar(e.toString());
       } finally {
         setLoading(false);
       }
@@ -69,6 +77,9 @@ class UsersViewModel extends ChangeNotifier {
   }
 
   resetPasswordDialog(BuildContext context) async {
-    return showDialog(context: context, builder: (context) => const ResetPasswordDialog());
+    return showDialog(
+      context: context,
+      builder: (context) => ResetPasswordDialog(firebaseAuthService: firebaseAuthService),
+    );
   }
 }

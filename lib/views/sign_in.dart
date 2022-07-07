@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/components/shared/button_with_loading.dart';
 import 'package:gastosrecorrentes/helpers/string_extensions.dart';
-import 'package:gastosrecorrentes/services/multi_language.dart';
-import 'package:gastosrecorrentes/services/navigation_service.dart';
+import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/services/local/navigation_service.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
@@ -87,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
                     const Text(" | "),
                     GestureDetector(
-                      onTap: () => openCreateUserScreen(context),
+                      onTap: () => NavigationService.openCreateUserScreen(context),
                       child: Text(MultiLanguage.translate("createUser"), style: TextStyles.links()),
                     ),
                   ],
@@ -96,8 +96,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 ButtonWithLoading(
                   isLoading: usersViewModel.loading,
                   title: MultiLanguage.translate("logIn"),
-                  onPressed: () async =>
-                      await usersViewModel.signIn(context, e: _emailController.text, p: _passwordController.text),
+                  onPressed: () async => await usersViewModel.signIn(
+                    context,
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  ),
                 ),
               ],
             ),
