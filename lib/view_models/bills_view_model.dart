@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gastosrecorrentes/models/create_bill_data.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
-import 'package:gastosrecorrentes/shared/globals.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,7 @@ class BillsViewModel extends ChangeNotifier {
   FireStoreService fireStoreService;
   bool _loading = false;
   Bill? currentSelectedBill;
+  Installment? currentSelectedInstallment;
   ApiRequest<List<Bill>> _listBills = ApiRequest.loading();
 
   BillsViewModel({required this.fireStoreService}) {
@@ -35,6 +35,7 @@ class BillsViewModel extends ChangeNotifier {
   }
 
   set setCurrentSelectedBill(Bill bill) => currentSelectedBill = bill;
+  set setCurrentSelectedInstallment(Installment installment) => currentSelectedInstallment = installment;
 
   void setListBills(ApiRequest<List<Bill>> response) => _listBills = response;
 
@@ -115,10 +116,8 @@ class BillsViewModel extends ChangeNotifier {
     bills.sort((a, b) {
       DateTime aMonthInstallment = DateTime(now.year, now.month, a.monthlydueDay!);
       DateTime bMonthInstallment = DateTime(now.year, now.month, b.monthlydueDay!);
-      bool aIsPaid =
-          a.installments!.where((element) => element.dueDate == aMonthInstallment && element.isPaid).isNotEmpty;
-      bool bIsPaid =
-          b.installments!.where((element) => element.dueDate == bMonthInstallment && element.isPaid).isNotEmpty;
+      bool aIsPaid = a.installments!.where((element) => element.dueDate == aMonthInstallment && element.isPaid).isNotEmpty;
+      bool bIsPaid = b.installments!.where((element) => element.dueDate == bMonthInstallment && element.isPaid).isNotEmpty;
 
       if (aIsPaid == bIsPaid) {
         return a.installments![0].dueDate.compareTo(b.installments![0].dueDate);
@@ -219,6 +218,21 @@ class BillsViewModel extends ChangeNotifier {
     }
     installments.sort((a, b) => paidsLastThenByDate(a, b));
     return installments;
+  }
+
+  Future updateCurrentAttachment(Installment installment, String? imageString) async {
+    try {
+      setLoading(true);
+      for (Installment i in currentSelectedBill!.installments!) {
+        if (i == installment) {
+          i.attachment = imageString;
+        }
+      }
+      await fireStoreService.updateBill(currentSelectedBill!);
+      setLoading(false);
+    } catch (e) {
+      showSnackBar(e.toString());
+    }
   }
 
   Future updateInstallmentPrice(Installment installment, String value) async {

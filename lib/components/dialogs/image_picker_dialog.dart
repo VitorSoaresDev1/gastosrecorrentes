@@ -7,6 +7,7 @@ import 'package:gastosrecorrentes/services/local/multi_language.dart';
 class ImagePickerDialog extends StatelessWidget {
   final ImagePickerHandler _listener;
   final AnimationController _controller;
+  String? imageString;
   BuildContext? context;
   Animation<double>? _drawerContentsOpacity;
   Animation<Offset>? _drawerDetailsPosition;
@@ -27,12 +28,12 @@ class ImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  getImage(BuildContext context) {
+  Future<String?> getImage(BuildContext context) async {
     if (_drawerDetailsPosition == null || _drawerContentsOpacity == null) {
-      return;
+      return null;
     }
     _controller.forward();
-    showDialog(
+    return showDialog(
       barrierDismissible: true,
       useRootNavigator: true,
       context: context,
@@ -56,7 +57,7 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   void navigationPage() {
-    Navigator.pop(context!);
+    Navigator.pop(context!, imageString);
   }
 
   dismissDialog() {
@@ -68,38 +69,36 @@ class ImagePickerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     this.context = context;
     return Material(
-        type: MaterialType.transparency,
-        child: Opacity(
-          opacity: 1.0,
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () async => await _listener.openCamera(context),
-                  child: roundedButton(MultiLanguage.translate("camera"),
-                      const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
+      type: MaterialType.transparency,
+      child: Opacity(
+        opacity: 1.0,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () async => imageString = await _listener.openCamera(context),
+                child: roundedButton(MultiLanguage.translate("camera"), const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
+              ),
+              GestureDetector(
+                onTap: () async => imageString = await _listener.openGallery(context),
+                child: roundedButton(MultiLanguage.translate("gallery"), const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
+              ),
+              const SizedBox(height: 15.0),
+              GestureDetector(
+                onTap: () => dismissDialog(),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
+                  child: roundedButton(MultiLanguage.translate("cancel"), const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
                 ),
-                GestureDetector(
-                  onTap: () async => await _listener.openGallery(context),
-                  child: roundedButton(MultiLanguage.translate("gallery"),
-                      const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
-                ),
-                const SizedBox(height: 15.0),
-                GestureDetector(
-                  onTap: () => dismissDialog(),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
-                    child: roundedButton(MultiLanguage.translate("drawerPictureCancel"),
-                        const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0), Colors.white.withOpacity(.9), Colors.black87),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor) {

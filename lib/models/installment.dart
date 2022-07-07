@@ -9,6 +9,8 @@ class Installment {
   double price;
   bool isLate;
   bool isPaid;
+  String? attachment;
+
   Installment({
     required this.id,
     required this.index,
@@ -16,6 +18,7 @@ class Installment {
     required this.price,
     required this.isLate,
     required this.isPaid,
+    this.attachment,
   });
 
   Installment copyWith({
@@ -25,6 +28,7 @@ class Installment {
     double? price,
     bool? isLate,
     bool? isPaid,
+    String? attachment,
   }) {
     return Installment(
       id: id ?? this.id,
@@ -33,6 +37,7 @@ class Installment {
       price: price ?? this.price,
       isLate: isLate ?? this.isLate,
       isPaid: isPaid ?? this.isPaid,
+      attachment: attachment ?? this.attachment,
     );
   }
 
@@ -44,6 +49,7 @@ class Installment {
       'price': price,
       'isLate': isLate,
       'isPaid': isPaid,
+      'attachment': attachment,
     };
   }
 
@@ -55,6 +61,7 @@ class Installment {
       price: map['price']?.toDouble() ?? 0.0,
       isLate: map['isLate'] ?? false,
       isPaid: map['isPaid'] ?? false,
+      attachment: map['attachment'],
     );
   }
 
@@ -64,25 +71,19 @@ class Installment {
 
   @override
   String toString() {
-    return 'Installment(id: $id, index: $index, dueDate: $dueDate, price: $price, isLate: $isLate, isPaid: $isPaid)';
+    return 'Installment(id: $id, index: $index, dueDate: $dueDate, price: $price, isLate: $isLate, isPaid: $isPaid, attachment: $attachment)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Installment &&
-        other.id == id &&
-        other.index == index &&
-        other.dueDate == dueDate &&
-        other.price == price &&
-        other.isLate == isLate &&
-        other.isPaid == isPaid;
+    return other is Installment && other.id == id && other.index == index && other.dueDate == dueDate && other.price == price && other.isLate == isLate && other.isPaid == isPaid && other.attachment == attachment;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ index.hashCode ^ dueDate.hashCode ^ price.hashCode ^ isLate.hashCode ^ isPaid.hashCode;
+    return id.hashCode ^ index.hashCode ^ dueDate.hashCode ^ price.hashCode ^ isLate.hashCode ^ isPaid.hashCode ^ attachment.hashCode;
   }
 
   static Color getInstallmentColor(BuildContext context, Installment installment) {

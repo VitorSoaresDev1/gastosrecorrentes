@@ -19,12 +19,6 @@ class BillDetailsScreen extends StatelessWidget {
         title: Text(currentBill.name),
         elevation: 0,
         actions: [
-          // IconButton(
-          //   onPressed: () => const BillDetailDropdownMenu(),
-          //   icon: const Icon(FontAwesomeIcons.ellipsisVertical),
-          //   padding: const EdgeInsets.all(2),
-          //   splashRadius: 20,
-          // )
           BillDetailDropdownMenu(bill: currentBill),
         ],
       ),
@@ -49,11 +43,7 @@ class BillDetailsScreen extends StatelessWidget {
             ]),
             ListView(
               physics: const ClampingScrollPhysics(),
-              children: [
-                const BillSummary(),
-                const SizedBox(height: 8),
-                InstallmentsAnimatedList(billsViewModel: billsViewModel)
-              ],
+              children: [const BillSummary(), const SizedBox(height: 8), InstallmentsAnimatedList(billsViewModel: billsViewModel)],
             ),
           ],
         ),

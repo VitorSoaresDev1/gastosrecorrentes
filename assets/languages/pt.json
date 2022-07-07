@@ -36,7 +36,13 @@
     "numberOfInstallments": "Número de parcelas",
     "numberOfInstallmentsExplainText": "O valor 0 cria uma conta sem prazo para terminar. O numero inserido será a quantidade de meses que a conta se repetirá.",
     "informPayment": "Informar pagamento",
-    "attach": "Anexar comprovante",
+    "attachProof": "Anexar comprovante",
+    "attach": "Anexar",
+    "remove": "Remover",
+    "view": "Visualizar",
+    "gallery": "Galeria",
+    "camera": "Camera",
+    "proofOfPayment": "Comprovante",
     "changePrice": "Alterar valor",
     "paid": "Pago",
     "newValue": "Valor atualizado",
@@ -51,5 +57,6 @@
     "CREDENTIALS_NOT_FOUND": "E-mail e ou senha fornecidos estão incorretos",
     "INVALID_DAY_OF_MONTH": "Insira um dia do mês válido",
     "permission-denied": "Sem permissão necessária",
+    "no_network_connection": "Sem conexão com a internet.",
     "unkown_error": "Erro desconhecido"
 }

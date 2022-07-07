@@ -7,7 +7,7 @@ import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
 import 'package:provider/provider.dart';
 
-enum MenuItem { changeValue, archiveBill, deleteBill }
+enum MenuItem { /*changeValue, archiveBill, */ deleteBill }
 
 class BillDetailDropdownMenu extends StatelessWidget {
   final Bill? bill;
@@ -26,10 +26,10 @@ class BillDetailDropdownMenu extends StatelessWidget {
       offset: const Offset(0, 40),
       onSelected: (value) async {
         switch (value) {
-          //TODO implementar changedefaultvalue && archiveBill
-          case MenuItem.changeValue:
-          case MenuItem.archiveBill:
-            break;
+          //TO DO implementar changedefaultvalue && archiveBill
+          //case MenuItem.changeValue:
+          // case MenuItem.archiveBill:
+          //  break;
           case MenuItem.deleteBill:
             await billsViewModel.deleteBill(bill!, usersViewModel.user!.id!, context);
             break;
@@ -42,12 +42,12 @@ class BillDetailDropdownMenu extends StatelessWidget {
   PopupMenuItem buildMenuItem(MenuItem value) {
     String item = '';
     switch (value) {
-      case MenuItem.changeValue:
-        item = MultiLanguage.translate("changeDefaultValue");
-        break;
-      case MenuItem.archiveBill:
-        item = MultiLanguage.translate("archiveBill");
-        break;
+      //case MenuItem.changeValue:
+      // item = MultiLanguage.translate("changeDefaultValue");
+      // break;
+      //case MenuItem.archiveBill:
+      //item = MultiLanguage.translate("archiveBill");
+      //break;
       case MenuItem.deleteBill:
         item = MultiLanguage.translate("deleteBill");
         break;

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
+import 'package:gastosrecorrentes/views/attach_view_screen.dart';
 import 'package:gastosrecorrentes/views/bill_details_screen.dart';
 import 'package:gastosrecorrentes/views/create_bill_screen.dart';
 import 'package:gastosrecorrentes/views/create_user_screen.dart';
@@ -18,6 +19,7 @@ class NavigationService {
     '/createUser': (context) => const CreateUserScreen(),
     '/createBill': (context) => const CreateBillScreen(),
     '/billDetails': (context) => const BillDetailsScreen(),
+    '/attachmentViewScreen': (context) => const AttachmentViewScreen(),
   };
 
   static void replaceToSignInScreen(BuildContext context) => Navigator.pushReplacementNamed(context, '/signIn');
@@ -29,6 +31,8 @@ class NavigationService {
   static void openCreateBillScreen(BuildContext context) => Navigator.pushNamed(context, '/createBill');
 
   static void openBillDetailsScreen(BuildContext context) => Navigator.pushNamed(context, '/billDetails');
+
+  static void openAttachmentViewScreen(BuildContext context) => Navigator.pushNamed(context, '/attachmentViewScreen');
 
   static void navigateToInitialScreen(BuildContext context, User? firebaseUser) {
     final usersViewModel = context.watch<UsersViewModel>();

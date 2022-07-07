@@ -60,7 +60,9 @@ class UsersViewModel extends ChangeNotifier {
         NavigationService.replaceToHomeScreen(context);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-          showSnackBar(MultiLanguage.translate("CREDENTIALS_NOT_FOUND"));
+          showSnackBar(translateErrors("CREDENTIALS_NOT_FOUND"));
+        } else if (e.code == 'network-request-failed') {
+          showSnackBar(translateErrors("no_network_connection"));
         }
       } catch (e) {
         showSnackBar(e.toString());

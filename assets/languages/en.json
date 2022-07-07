@@ -36,7 +36,13 @@
     "numberOfInstallments": "Number of installments",
     "numberOfInstallmentsExplainText": "Value equals to 0 creates a bill with no expiration date. The value inserted will be the amount of months the bill will be needed to pay",
     "informPayment": "Inform payment",
-    "attach": "Attach proof of payment",
+    "attachProof": "Attach proof of payment",
+    "attach": "Attach",
+    "remove": "Remove",
+    "view": "View",
+    "gallery": "Gallery",
+    "camera": "Camera",
+    "proofOfPayment": "Proof of Payment",
     "changePrice": "Change price",
     "paid": "Paid",
     "newValue": "New value",
@@ -51,5 +57,6 @@
     "CREDENTIALS_NOT_FOUND": "E-mail and or password provided are incorret.",
     "INVALID_DAY_OF_MONTH": "Enter a valid day of the month",
     "permission-denied": "You don't have permission to access this info.",
+    "no_network_connection": "No network connection available.",
     "unkown_error": "Unkown Error"
 }
