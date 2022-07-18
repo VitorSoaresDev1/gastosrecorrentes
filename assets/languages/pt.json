@@ -1,6 +1,7 @@
 {
     "appTitle": "Gastos Recorrentes",
     "activeBills": "Contas Ativas",
+    "settings": "Configurações",
     "email": "E-mail",
     "repeatEmail": "Repetir E-mail",
     "password": "Senha",

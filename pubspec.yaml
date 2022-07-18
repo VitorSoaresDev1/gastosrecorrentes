@@ -34,6 +34,7 @@ dependencies:
   get_it: ^7.2.0
   shared_preferences: ^2.0.15
   firebase_core: 
+  firebase_core_platform_interface: 4.4.0
   firebase_auth: 
   cloud_firestore:
   font_awesome_flutter: ^10.1.0

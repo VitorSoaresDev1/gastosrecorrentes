@@ -36,6 +36,10 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     UsersViewModel usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: kBottomNavigationBarHeight,
+        color: Colors.grey[50],
+      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
@@ -82,9 +86,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                        onTap: () => usersViewModel.resetPasswordDialog(context),
-                        child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
+                    GestureDetector(onTap: () => usersViewModel.resetPasswordDialog(context), child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
                     const Text(" | "),
                     GestureDetector(
                       onTap: () => NavigationService.openCreateUserScreen(context),

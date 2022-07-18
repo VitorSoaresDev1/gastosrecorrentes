@@ -45,6 +45,10 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
     final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("createNewBill"))),
+      bottomNavigationBar: Container(
+        height: kBottomNavigationBarHeight,
+        color: Colors.grey[50],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

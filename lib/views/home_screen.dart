@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
 import 'package:gastosrecorrentes/components/shared/error_view_widget.dart';
 import 'package:gastosrecorrentes/components/shared/loading_widget.dart';
@@ -32,14 +33,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
     return Scaffold(
-      appBar: AppBar(title: Text(MultiLanguage.translate("activeBills"))),
+      appBar: AppBar(
+        title: Text(MultiLanguage.translate("activeBills")),
+        actions: [
+          IconButton(
+            iconSize: 18,
+            splashRadius: 20,
+            visualDensity: VisualDensity.compact,
+            tooltip: MultiLanguage.translate("settings"),
+            icon: const Icon(FontAwesomeIcons.gear),
+            onPressed: () => {},
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => NavigationService.openCreateBillScreen(context),
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: Container(
+        height: kBottomNavigationBarHeight,
+        color: Colors.grey[50],
+      ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+          padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
           child: Builder(
             builder: ((context) {
               switch (billsViewModel.listBills.status) {
@@ -52,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return ListView.separated(
                     itemCount: billsViewModel.listBills.data!.length,
                     separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
+                    padding: const EdgeInsets.only(bottom: 72, top: 8),
                     itemBuilder: (context, index) => BillCard(
                       bill: billsViewModel.listBills.data![index],
                       onTap: () {

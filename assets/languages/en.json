@@ -1,6 +1,7 @@
 {
     "appTitle": "Recurrent Bills",
     "activeBills": "Active Bills",
+    "settings": "Settings",
     "email": "E-mail",
     "repeatEmail": "Repeat E-mail",
     "password": "Password",
