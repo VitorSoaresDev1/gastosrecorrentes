@@ -13,9 +13,11 @@ class MultiLanguage {
     if (supportedLocales.map((e) => e.languageCode).contains(locale[0])) {
       await rootBundle
           .loadString("assets/languages/${locale[0]}.json")
-          .then((value) => languageMap = jsonDecode(value));
+          .then((value) => locator<MultiLanguage>().languageMap = jsonDecode(value));
     } else {
-      await rootBundle.loadString("assets/languages/en.json").then((value) => languageMap = jsonDecode(value));
+      await rootBundle
+          .loadString("assets/languages/en.json")
+          .then((value) => locator<MultiLanguage>().languageMap = jsonDecode(value));
     }
   }
 

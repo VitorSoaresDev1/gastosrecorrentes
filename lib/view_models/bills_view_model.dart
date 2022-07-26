@@ -34,6 +34,12 @@ class BillsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  signedOut() {
+    currentSelectedBill = null;
+    currentSelectedInstallment = null;
+    _listBills = ApiRequest.loading();
+  }
+
   set setCurrentSelectedBill(Bill bill) => currentSelectedBill = bill;
   set setCurrentSelectedInstallment(Installment installment) => currentSelectedInstallment = installment;
 
@@ -116,8 +122,10 @@ class BillsViewModel extends ChangeNotifier {
     bills.sort((a, b) {
       DateTime aMonthInstallment = DateTime(now.year, now.month, a.monthlydueDay!);
       DateTime bMonthInstallment = DateTime(now.year, now.month, b.monthlydueDay!);
-      bool aIsPaid = a.installments!.where((element) => element.dueDate == aMonthInstallment && element.isPaid).isNotEmpty;
-      bool bIsPaid = b.installments!.where((element) => element.dueDate == bMonthInstallment && element.isPaid).isNotEmpty;
+      bool aIsPaid =
+          a.installments!.where((element) => element.dueDate == aMonthInstallment && element.isPaid).isNotEmpty;
+      bool bIsPaid =
+          b.installments!.where((element) => element.dueDate == bMonthInstallment && element.isPaid).isNotEmpty;
 
       if (aIsPaid == bIsPaid) {
         return a.installments![0].dueDate.compareTo(b.installments![0].dueDate);

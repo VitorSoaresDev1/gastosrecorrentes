@@ -86,7 +86,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(onTap: () => usersViewModel.resetPasswordDialog(context), child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
+                    GestureDetector(
+                        onTap: () => usersViewModel.resetPasswordDialog(context),
+                        child: Text(MultiLanguage.translate("forgotPassword"), style: TextStyles.links())),
                     const Text(" | "),
                     GestureDetector(
                       onTap: () => NavigationService.openCreateUserScreen(context),
