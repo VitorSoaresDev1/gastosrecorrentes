@@ -42,36 +42,27 @@ class _LanguageDialogState extends State<LanguageDialog> {
             leading: Radio(
               value: 1,
               groupValue: groupVal,
-              onChanged: (value) {
-                setState(() {
-                  groupVal = value as int;
-                  chosenLanguage = 'en_US';
-                });
-              },
+              onChanged: (value) => setRadioOption(value),
               activeColor: Colors.indigo,
             ),
+            onTap: () => setRadioOption(1),
           ),
           ListTile(
-            title: const Text("Portugues"),
-            leading: Radio(
-              value: 2,
-              groupValue: groupVal,
-              onChanged: (value) {
-                setState(() {
-                  groupVal = value as int;
-                  chosenLanguage = 'pt_BR';
-                });
-              },
-              activeColor: Colors.indigo,
-            ),
-          ),
+              title: const Text("Portugues"),
+              leading: Radio(
+                value: 2,
+                groupValue: groupVal,
+                onChanged: (value) => setRadioOption(value),
+                activeColor: Colors.indigo,
+              ),
+              onTap: () => setRadioOption(2)),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () async {
             if (groupVal == 0) {
-              chosenLanguage = 'pt_BR';
+              chosenLanguage = 'pt';
               await preferences.setlanguage(chosenLanguage);
               initAppViewModel.language = chosenLanguage;
               Navigator.pop(context);
@@ -95,5 +86,21 @@ class _LanguageDialogState extends State<LanguageDialog> {
         ),
       ],
     );
+  }
+
+  void setRadioOption(Object? value) {
+    switch (value) {
+      case 1:
+        chosenLanguage = 'en';
+        break;
+      case 2:
+        chosenLanguage = 'pt';
+        break;
+      default:
+    }
+    setState(() {
+      groupVal = value as int;
+      chosenLanguage;
+    });
   }
 }

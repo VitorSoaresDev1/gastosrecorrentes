@@ -4,6 +4,7 @@ class CreateBillData {
   late String dueDay;
   late String amountMonths;
   late String userId;
+  late String startingMonth;
 
   CreateBillData({
     required this.name,
@@ -11,5 +12,6 @@ class CreateBillData {
     required this.dueDay,
     required this.amountMonths,
     required this.userId,
+    required this.startingMonth,
   });
 }

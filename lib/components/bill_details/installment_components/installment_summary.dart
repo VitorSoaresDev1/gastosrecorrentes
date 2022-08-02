@@ -21,7 +21,8 @@ class InstallmentSummary extends StatelessWidget {
           style: TextStyles.bodyText2(),
         ),
         Text(
-          "${MultiLanguage.translate("dueTo")}: " + DateHelper.formatDDMMYYYY(LocalDate.dateTime(installment.dueDate)),
+          "${MultiLanguage.translate("dueTo")}: " +
+              DateHelper.formatDDMMYYYY(LocalDate.dateTime(installment.dueDate), context),
           style: TextStyles.bodyText2(),
         ),
       ],

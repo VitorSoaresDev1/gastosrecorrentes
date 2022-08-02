@@ -6,6 +6,8 @@ import 'package:gastosrecorrentes/models/bill.dart';
 import 'package:gastosrecorrentes/models/installment.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/shared/text_styles.dart';
+import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 
 class BillCard extends StatelessWidget {
@@ -19,9 +21,8 @@ class BillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    DateTime? duedate = DateTime(now.year, now.month, bill.monthlydueDay!);
-    Installment currentInstallment = _getCurrentMonthInstallment(duedate);
+    final billsViewModel = context.watch<BillsViewModel>();
+    Installment currentInstallment = billsViewModel.getCurrentMonthInstallment(bill);
     return Stack(
       children: [
         Container(
@@ -80,7 +81,10 @@ class BillCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Text(MultiLanguage.translate("dueTo") + ': ${DateHelper.formatDDMM(LocalDate(now.year, now.month, bill.monthlydueDay!))}', style: TextStyles.bodyText2()),
+                                Text(
+                                    MultiLanguage.translate("dueTo") +
+                                        ': ${DateHelper.formatDDMM(LocalDate(currentInstallment.dueDate.year, currentInstallment.dueDate.month, bill.monthlydueDay!), context)}',
+                                    style: TextStyles.bodyText2()),
                               ],
                             ),
                           ],
@@ -100,6 +104,4 @@ class BillCard extends StatelessWidget {
       ],
     );
   }
-
-  Installment _getCurrentMonthInstallment(DateTime duedate) => bill.installments!.firstWhere((element) => element.dueDate == duedate, orElse: () => bill.installments![0]);
 }

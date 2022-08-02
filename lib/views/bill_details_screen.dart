@@ -13,7 +13,6 @@ class BillDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final BillsViewModel billsViewModel = context.watch<BillsViewModel>();
     final Bill currentBill = billsViewModel.currentSelectedBill!;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(currentBill.name),
@@ -23,10 +22,6 @@ class BillDetailsScreen extends StatelessWidget {
         ],
       ),
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-        color: Colors.grey[50],
-      ),
       body: SafeArea(
         bottom: true,
         child: Stack(
@@ -47,7 +42,11 @@ class BillDetailsScreen extends StatelessWidget {
             ]),
             ListView(
               physics: const ClampingScrollPhysics(),
-              children: [const BillSummary(), const SizedBox(height: 8), InstallmentsAnimatedList(billsViewModel: billsViewModel)],
+              children: [
+                const BillSummary(),
+                const SizedBox(height: 8),
+                InstallmentsAnimatedList(billsViewModel: billsViewModel)
+              ],
             ),
           ],
         ),

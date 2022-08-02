@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
+import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
+import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:provider/provider.dart';
+import 'package:time_machine/time_machine.dart';
 
 class CreateBillForm extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController valueController;
   final TextEditingController dueDayController;
+  final TextEditingController startMonthController;
   final TextEditingController amountMonthsController;
   final GlobalKey<FormState> createBillFormKey;
-
-  const CreateBillForm({
+  final DateTime selectedDate = DateTime.now();
+  CreateBillForm({
     Key? key,
     required this.nameController,
     required this.valueController,
     required this.dueDayController,
     required this.amountMonthsController,
     required this.createBillFormKey,
+    required this.startMonthController,
   }) : super(key: key);
 
   final double? defaultFieldsVerticalPadding = 8;
@@ -99,9 +106,47 @@ class CreateBillForm extends StatelessWidget {
                 return null;
               },
             ),
+            SizedBox(height: defaultFieldsVerticalPadding),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    controller: startMonthController,
+                    onTap: () async => _openMonthPickerDialog(context),
+                    readOnly: true,
+                    title: Text(MultiLanguage.translate("startingMonth") + ": "),
+                    type: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return MultiLanguage.translate("CANT_BE_EMPTY");
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () async => _openMonthPickerDialog(context),
+                )
+              ],
+            )
           ],
         ),
       ),
     );
   }
+
+  Future<void> _openMonthPickerDialog(BuildContext context) => showMonthPicker(
+        context: context,
+        firstDate: DateTime(DateTime.now().year - 1, 5),
+        lastDate: DateTime(DateTime.now().year + 1, 9),
+        initialDate: selectedDate,
+        locale: Locale(Provider.of<InitAppViewModel>(context, listen: false).language),
+      ).then((date) {
+        if (date != null) {
+          startMonthController.text = DateHelper.formatMMYYYY(LocalDate.dateTime(date), context);
+        }
+      });
 }

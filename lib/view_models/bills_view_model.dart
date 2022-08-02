@@ -45,6 +45,12 @@ class BillsViewModel extends ChangeNotifier {
 
   void setListBills(ApiRequest<List<Bill>> response) => _listBills = response;
 
+  Installment getCurrentMonthInstallment(Bill bill) {
+    DateTime now = DateTime.now();
+    DateTime? duedate = DateTime(now.year, now.month, bill.monthlydueDay!);
+    return bill.installments!.firstWhere((element) => element.dueDate == duedate, orElse: () => bill.installments![0]);
+  }
+
   Future getRegisteredBills(String userId) async {
     try {
       setLoading(true);
@@ -138,8 +144,8 @@ class BillsViewModel extends ChangeNotifier {
   Future addNewBill({required BuildContext context, required CreateBillData data}) async {
     try {
       setLoading(true);
-      DateTime now = DateTime.now();
-      DateTime startDate = DateTime(now.year, now.month, 1).subtract(const Duration(days: 120));
+      DateTime startDate =
+          DateTime(int.parse(data.startingMonth.split("/")[1]), int.parse(data.startingMonth.split("/")[0]), 1);
       double parsedValue = double.tryParse(data.value.replaceAll(",", ".")) ?? 0;
 
       Bill billToAdd = Bill(

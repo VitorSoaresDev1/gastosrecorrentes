@@ -39,10 +39,6 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("createUser"))),
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-        color: Colors.grey[50],
-      ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SafeArea(

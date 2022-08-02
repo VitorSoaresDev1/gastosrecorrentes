@@ -10,10 +10,6 @@ class Settings extends StatelessWidget {
       appBar: AppBar(
         title: Text(MultiLanguage.translate("activeBills")),
       ),
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-        color: Colors.grey[50],
-      ),
     );
   }
 }

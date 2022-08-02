@@ -24,7 +24,7 @@ class BillSummary extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _dateTile(currentBill),
+          _dateTile(currentBill, context),
           const SizedBox(height: 8),
           _activeAndDefaultValueTile(currentBill),
           const SizedBox(height: 16),
@@ -34,7 +34,7 @@ class BillSummary extends StatelessWidget {
     );
   }
 
-  Row _dateTile(Bill currentBill) {
+  Row _dateTile(Bill currentBill, BuildContext context) {
     DateTime dateAux = DateTime.fromMillisecondsSinceEpoch(currentBill.startDate!);
     LocalDate startDate = LocalDate(dateAux.year, dateAux.month, currentBill.monthlydueDay!);
     LocalDate endDate = startDate.addMonths(currentBill.ammountMonths! - 1);
@@ -42,12 +42,12 @@ class BillSummary extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          MultiLanguage.translate("start") + ": " + DateHelper.formatMMYY(startDate),
+          MultiLanguage.translate("start") + ": " + DateHelper.formatMMYY(startDate, context),
           style: TextStyles.bodyText(light: true),
         ),
         if (currentBill.ammountMonths! > 0)
           Text(
-            MultiLanguage.translate("end") + ": " + DateHelper.formatMMYY(endDate),
+            MultiLanguage.translate("end") + ": " + DateHelper.formatMMYY(endDate, context),
             style: TextStyles.bodyText(light: true),
           ),
       ],
