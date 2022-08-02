@@ -33,14 +33,20 @@ class InitAppViewModel extends ChangeNotifier {
     }
     _language = await preferences.getLanguageChoice();
     if (_language == null) {
-      await _showLanguageDialog(context);
+      await showLanguageDialog(context);
     }
-    await locator<MultiLanguage>().loadLanguageMap(_language!);
+    await applyNewLanguage();
     _loading = false;
-    notifyListeners();
   }
 
-  _showLanguageDialog(BuildContext context) async {
+  Future showLanguageDialog(BuildContext context) async {
     await showDialog(context: context, barrierDismissible: false, builder: (context) => const LanguageDialog());
+  }
+
+  Future applyNewLanguage() async {
+    if (_language != null) {
+      await locator<MultiLanguage>().loadLanguageMap(_language!);
+      notifyListeners();
+    }
   }
 }

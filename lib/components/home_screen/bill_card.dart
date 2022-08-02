@@ -32,7 +32,7 @@ class BillCard extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               bottomRight: Radius.circular(10),
               bottomLeft: Radius.circular(14),
-              topLeft: Radius.circular(10),
+              topLeft: Radius.circular(14),
               topRight: Radius.circular(10),
             ),
           ),
@@ -51,7 +51,7 @@ class BillCard extends StatelessWidget {
                 child: Material(
                   elevation: 2,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  color: Theme.of(context).listTileTheme.tileColor,
+                  color: Colors.grey[50],
                   child: InkWell(
                     onTap: onTap,
                     borderRadius: BorderRadius.circular(10),
@@ -80,10 +80,7 @@ class BillCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Text(
-                                    MultiLanguage.translate("dueTo") +
-                                        ': ${DateHelper.formatDDMM(LocalDate(now.year, now.month, bill.monthlydueDay!))}',
-                                    style: TextStyles.bodyText2()),
+                                Text(MultiLanguage.translate("dueTo") + ': ${DateHelper.formatDDMM(LocalDate(now.year, now.month, bill.monthlydueDay!))}', style: TextStyles.bodyText2()),
                               ],
                             ),
                           ],
@@ -104,6 +101,5 @@ class BillCard extends StatelessWidget {
     );
   }
 
-  Installment _getCurrentMonthInstallment(DateTime duedate) =>
-      bill.installments!.firstWhere((element) => element.dueDate == duedate, orElse: () => bill.installments![0]);
+  Installment _getCurrentMonthInstallment(DateTime duedate) => bill.installments!.firstWhere((element) => element.dueDate == duedate, orElse: () => bill.installments![0]);
 }

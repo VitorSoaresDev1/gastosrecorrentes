@@ -23,6 +23,10 @@ class BillDetailsScreen extends StatelessWidget {
         ],
       ),
       resizeToAvoidBottomInset: false,
+      bottomNavigationBar: Container(
+        height: kBottomNavigationBarHeight,
+        color: Colors.grey[50],
+      ),
       body: SafeArea(
         bottom: true,
         child: Stack(

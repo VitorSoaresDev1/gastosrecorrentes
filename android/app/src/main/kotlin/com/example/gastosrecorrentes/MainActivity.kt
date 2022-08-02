@@ -1,4 +1,4 @@
-package com.example.gastosrecorrentes
+package com.vitorsoares.gastosrecorrentes
 
 import io.flutter.embedding.android.FlutterActivity
 

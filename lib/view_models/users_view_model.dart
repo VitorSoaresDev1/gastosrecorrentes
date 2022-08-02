@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gastosrecorrentes/components/dialogs/logout_dialog.dart';
 import 'package:gastosrecorrentes/components/dialogs/reset_password_dialog.dart';
 import 'package:gastosrecorrentes/helpers/functions_helper.dart';
 import 'package:gastosrecorrentes/models/user.dart';
@@ -7,6 +8,8 @@ import 'package:gastosrecorrentes/services/remote/firebase_auth_service.dart';
 import 'package:gastosrecorrentes/services/remote/firestore_service.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/services/local/navigation_service.dart';
+import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
+import 'package:provider/provider.dart';
 
 class UsersViewModel extends ChangeNotifier {
   AppUser? user;
@@ -69,6 +72,23 @@ class UsersViewModel extends ChangeNotifier {
       } finally {
         setLoading(false);
       }
+    }
+  }
+
+  Future showLogOutDialog(BuildContext context) async {
+    await showDialog(context: context, barrierDismissible: true, builder: (context) => const LogOutDialog());
+  }
+
+  Future signOut(context) async {
+    setLoading(true);
+    try {
+      await firebaseAuthService.signOut();
+      Provider.of<BillsViewModel>(context, listen: false).signedOut();
+      NavigationService.replaceToSignInScreen(context);
+    } catch (e) {
+      showSnackBar(e.toString());
+    } finally {
+      setLoading(false);
     }
   }
 
