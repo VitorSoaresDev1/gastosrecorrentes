@@ -4,7 +4,7 @@ import 'package:gastosrecorrentes/components/shared/custom_text_field.dart';
 import 'package:gastosrecorrentes/helpers/date_helper.dart';
 import 'package:gastosrecorrentes/services/local/multi_language.dart';
 import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:month_picker_dialog_2/month_picker_dialog_2.dart';
 import 'package:provider/provider.dart';
 import 'package:time_machine/time_machine.dart';
 

@@ -27,6 +27,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       key: key,

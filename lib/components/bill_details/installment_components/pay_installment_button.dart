@@ -35,8 +35,8 @@ class PayInstallmentButton extends StatelessWidget {
                       usersViewModel.user!.id!,
                     ),
             style: ElevatedButton.styleFrom(
-              primary: Colors.green[800],
-              onPrimary: Colors.green[800],
+              backgroundColor: Colors.green[800],
+              foregroundColor: Colors.green[800],
               elevation: 4,
               side: BorderSide(
                 width: 1,

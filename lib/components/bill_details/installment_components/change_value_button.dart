@@ -114,7 +114,7 @@ class _ChangeValueButtonState extends State<ChangeValueButton> {
                         },
                       ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
+                backgroundColor: Colors.white,
                 elevation: 4,
                 side: BorderSide(
                   width: 1,

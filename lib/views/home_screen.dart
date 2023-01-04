@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
     context.watch<InitAppViewModel>().language;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(MultiLanguage.translate("activeBills")),

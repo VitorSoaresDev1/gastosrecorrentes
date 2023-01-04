@@ -6,7 +6,11 @@ class FirebaseAuthService {
   }
 
   Future signIn({required String email, required String password}) async {
-    return await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      return await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future signOut() async {

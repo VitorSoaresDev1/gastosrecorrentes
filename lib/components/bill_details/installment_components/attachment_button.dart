@@ -82,7 +82,8 @@ class _AttachmentButtonState extends State<AttachmentButton> with TickerProvider
                         ),
                         ListTile(
                           minLeadingWidth: 20,
-                          leading: Icon(FontAwesomeIcons.fileLines, size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
+                          leading: Icon(FontAwesomeIcons.fileLines,
+                              size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
                           title: Text(MultiLanguage.translate("view")),
                           enabled: hasAttachment,
                           onTap: () {
@@ -92,7 +93,8 @@ class _AttachmentButtonState extends State<AttachmentButton> with TickerProvider
                         ),
                         ListTile(
                             minLeadingWidth: 20,
-                            leading: Icon(FontAwesomeIcons.ban, size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
+                            leading: Icon(FontAwesomeIcons.ban,
+                                size: 20, color: hasAttachment ? Colors.grey[900] : Colors.grey),
                             title: Text(MultiLanguage.translate("remove")),
                             enabled: hasAttachment,
                             onTap: () async {
@@ -107,7 +109,7 @@ class _AttachmentButtonState extends State<AttachmentButton> with TickerProvider
               )
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.white,
+              backgroundColor: Colors.white,
               elevation: 4,
               side: const BorderSide(
                 width: 1,
