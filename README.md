@@ -9,7 +9,7 @@ O link para o diagrama encontra-se [neste link](https://drive.google.com/file/d/
 Ao abrir a imagem no link acima é possível visualizar o diagrama como arquivo.
 
 Para visualizar o diagrama na ferramenta de edição, é preciso fazer o download do arquivo do link do Google Drive fornecido acima
-Abrir o site [draw.io](https://app.diagrams.net) e escolher as seguintes opções:
+- Abrir o site [draw.io](https://app.diagrams.net) e escolher as seguintes opções:
 - Aparelho
 - Abrir diagrama existente
 - Selecionar arquivo do diagrama baixado [no link](https://drive.google.com/file/d/1W1tQtye-ay6Gxih8eQSNgpZKmPDD1VB8/view?usp=sharing)
