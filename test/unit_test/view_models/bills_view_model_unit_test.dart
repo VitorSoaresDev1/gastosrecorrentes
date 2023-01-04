@@ -108,12 +108,12 @@ void main() {
 
       when(fakeFireStore.setBilltoInactive(any)).thenAnswer((_) async => null);
       CreateBillData data = CreateBillData(
-        name: billToTest.name,
-        amountMonths: billToTest.ammountMonths!.toString(),
-        dueDay: billToTest.monthlydueDay!.toString(),
-        userId: billToTest.userId!,
-        value: billToTest.value.toString(),
-      );
+          name: billToTest.name,
+          amountMonths: billToTest.ammountMonths!.toString(),
+          dueDay: billToTest.monthlydueDay!.toString(),
+          userId: billToTest.userId!,
+          value: billToTest.value.toString(),
+          startingMonth: DateTime.now.toString());
       await viewModel.addNewBill(context: context, data: data);
 
       expect(viewModel.listBills.data!.contains(billToTest), true);

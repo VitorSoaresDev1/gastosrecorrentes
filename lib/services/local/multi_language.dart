@@ -9,10 +9,10 @@ class MultiLanguage {
   List<Locale> supportedLocales = [const Locale('en', 'US'), const Locale('pt', 'BR')];
 
   Future loadLanguageMap(String language) async {
-    List<String> locale = language.split("_");
-    if (supportedLocales.map((e) => e.languageCode).contains(locale[0])) {
+    String locale = language;
+    if (supportedLocales.map((e) => e.languageCode).contains(locale)) {
       await rootBundle
-          .loadString("assets/languages/${locale[0]}.json")
+          .loadString("assets/languages/$locale.json")
           .then((value) => locator<MultiLanguage>().languageMap = jsonDecode(value));
     } else {
       await rootBundle

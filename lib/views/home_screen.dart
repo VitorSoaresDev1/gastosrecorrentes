@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gastosrecorrentes/components/home_screen/bill_card.dart';
+import 'package:gastosrecorrentes/components/home_screen/bills_list.dart';
 import 'package:gastosrecorrentes/components/home_screen/settings_drop_down_menu.dart';
 import 'package:gastosrecorrentes/components/shared/error_view_widget.dart';
 import 'package:gastosrecorrentes/components/shared/loading_widget.dart';
@@ -33,8 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final billsViewModel = context.watch<BillsViewModel>();
-    final initAppViewModel = context.watch<InitAppViewModel>();
-    initAppViewModel.language;
+    context.watch<InitAppViewModel>().language;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(MultiLanguage.translate("activeBills")),
@@ -43,10 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => NavigationService.openCreateBillScreen(context),
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-        color: Colors.grey[50],
       ),
       body: SafeArea(
         child: Container(
@@ -60,18 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   String errorText = translateErrors(billsViewModel.listBills.message);
                   return ErrorViewWidget(errorText: errorText);
                 case ApiRequestStatus.completed:
-                  return ListView.separated(
-                    itemCount: billsViewModel.listBills.data!.length,
-                    separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 10),
-                    padding: const EdgeInsets.only(bottom: 72, top: 8),
-                    itemBuilder: (context, index) => BillCard(
-                      bill: billsViewModel.listBills.data![index],
-                      onTap: () {
-                        billsViewModel.setCurrentSelectedBill = billsViewModel.listBills.data![index];
-                        NavigationService.openBillDetailsScreen(context);
-                      },
-                    ),
-                  );
+                  return const BillsListView();
                 default:
               }
               return Container();

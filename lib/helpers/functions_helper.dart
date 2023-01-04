@@ -9,7 +9,7 @@ bool isNullOrEmpty(var item) {
 }
 
 scheduleCall(Function function) {
-  WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     await function();
   });
 }

@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gastosrecorrentes/models/installment.dart';
+import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
+import 'package:provider/provider.dart';
 
 class Bill {
   String? id;
@@ -122,15 +124,18 @@ class Bill {
 
   static Color? getCurrentBillListTileColor(BuildContext context, Bill bill) {
     DateTime now = DateTime.now();
-    DateTime? duedate = DateTime(now.year, now.month, bill.monthlydueDay!);
+    Installment currentInstallment =
+        Provider.of<BillsViewModel>(context, listen: false).getCurrentMonthInstallment(bill);
+    DateTime? duedate =
+        DateTime(currentInstallment.dueDate.year, currentInstallment.dueDate.month, bill.monthlydueDay!);
     Duration difference = duedate.difference(DateTime(now.year, now.month, now.day, 0, 0, 0));
     if (bill.installments!.where((element) => element.isLate == true && !element.isPaid).isNotEmpty) {
       return Colors.red[800]?.withOpacity(.8);
     } else if (bill.installments!.where((element) => element.dueDate == duedate && element.isPaid).isNotEmpty) {
       return Colors.green[800]?.withOpacity(.8);
-    } else if (difference.inDays < 1) {
+    } else if (difference.inDays <= 1) {
       return Colors.red[800]?.withOpacity(.8);
-    } else if (difference.inDays < 3) {
+    } else if (difference.inDays <= 3) {
       return Colors.yellow[700]?.withOpacity(.8);
     } else {
       return Colors.grey.withOpacity(.8);

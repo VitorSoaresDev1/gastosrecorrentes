@@ -2,6 +2,18 @@
 
 Um projeto feito para ajudar as pessoas a organizarem seus gastos mensais recorrentes.
 
+## WireFrame aplicação
+
+As telas da aplicação foram projetadas utilizando a ferramenta [draw.io](https://app.diagrams.net)
+O link para o diagrama encontra-se [neste link](https://drive.google.com/file/d/1W1tQtye-ay6Gxih8eQSNgpZKmPDD1VB8/view?usp=sharing)
+Ao abrir a imagem no link acima é possível visualizar o diagrama como arquivo.
+
+Para visualizar o diagrama na ferramenta de edição, é preciso fazer o download do arquivo do link do Google Drive fornecido acima
+Abrir o site [draw.io](https://app.diagrams.net) e escolher as seguintes opções:
+- Aparelho
+- Abrir diagrama existente
+- Selecionar arquivo do diagrama baixado [no link](https://drive.google.com/file/d/1W1tQtye-ay6Gxih8eQSNgpZKmPDD1VB8/view?usp=sharing)
+
 ## Começando
 
 Este projeto foi desenvolvido com a versão 2.10.4 do Flutter.

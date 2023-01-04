@@ -18,6 +18,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
   late TextEditingController _nameController;
   late TextEditingController _valueController;
   late TextEditingController _dueDayController;
+  late TextEditingController _startMonthController;
   late TextEditingController _amountMonthsController;
   final GlobalKey<FormState> createBillFormKey = GlobalKey<FormState>();
 
@@ -28,6 +29,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
     _valueController = TextEditingController();
     _dueDayController = TextEditingController();
     _amountMonthsController = TextEditingController();
+    _startMonthController = TextEditingController();
   }
 
   @override
@@ -37,6 +39,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
     _valueController.dispose();
     _dueDayController.dispose();
     _amountMonthsController.dispose();
+    _startMonthController.dispose();
   }
 
   @override
@@ -45,10 +48,6 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
     final usersViewModel = context.watch<UsersViewModel>();
     return Scaffold(
       appBar: AppBar(title: Text(MultiLanguage.translate("createNewBill"))),
-      bottomNavigationBar: Container(
-        height: kBottomNavigationBarHeight,
-        color: Colors.grey[50],
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,6 +58,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
               valueController: _valueController,
               dueDayController: _dueDayController,
               amountMonthsController: _amountMonthsController,
+              startMonthController: _startMonthController,
             ),
             const SizedBox(height: 32),
             ButtonWithLoading(
@@ -73,6 +73,7 @@ class _CreateBillScreenState extends State<CreateBillScreen> {
                           value: _valueController.text,
                           dueDay: _dueDayController.text,
                           amountMonths: _amountMonthsController.text,
+                          startingMonth: _startMonthController.text,
                         );
                         await billsViewModel.addNewBill(context: context, data: data);
                       }

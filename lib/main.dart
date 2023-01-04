@@ -8,6 +8,7 @@ import 'package:gastosrecorrentes/shared/globals.dart';
 import 'package:gastosrecorrentes/view_models/bills_view_model.dart';
 import 'package:gastosrecorrentes/view_models/init_app_view_model.dart';
 import 'package:gastosrecorrentes/view_models/users_view_model.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -26,6 +27,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Key key = UniqueKey();
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       key: key,
@@ -38,6 +44,10 @@ class _MyAppState extends State<MyApp> {
       child: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
           scaffoldMessengerKey: snackbarKey,
           debugShowCheckedModeBanner: false,
           title: 'Gastos Recorrentes',
